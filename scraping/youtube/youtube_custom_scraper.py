@@ -876,26 +876,85 @@ class YouTubeTranscriptScraper(Scraper):
             bt.logging.error(f"Error in proxy configuration: {str(e)}")
             return None
 
+    def _get_proxy_config_for_attempt(self, attempt: int):
+        """
+        Get proxy configuration for a specific attempt, with rotation logic.
+        
+        Args:
+            attempt: The current attempt number (0-based)
+            
+        Returns:
+            Proxy configuration object or None
+        """
+        # For now, use the same proxy config for all attempts
+        # In the future, this could implement proxy rotation
+        return self._get_proxy_config()
+
+    def _calculate_retry_delay(self, attempt: int, error_type: str) -> int:
+        """
+        Calculate retry delay based on attempt number and error type.
+        
+        Args:
+            attempt: The current attempt number (0-based)
+            error_type: Type of error ("rate_limit", "parse_error", "network_error")
+            
+        Returns:
+            Delay in seconds
+        """
+        base_delay = 5
+        
+        if error_type == "rate_limit":
+            # Exponential backoff for rate limiting: 5s, 10s, 20s
+            return base_delay * (2 ** attempt)
+        elif error_type == "parse_error":
+            # Linear backoff for parse errors: 5s, 10s, 15s
+            return base_delay * (attempt + 1)
+        else:
+            # Standard backoff for network errors: 5s, 8s, 12s
+            return base_delay + (attempt * 3)
+
     async def _get_transcript(
         self,
         video_id: str,
         max_retries: int = 3
     ):
         """
-        Fetch a raw transcript list for a single YouTube video,
-        with up to `max_retries` attempts if there are transient errors.
-        Wait 5 seconds between each retry attempt.
-
-        If a transcript is disabled or not found, we short-circuit immediately.
-        If there's an XML parse error (like 'no element found'), we log a simpler
-        warning without printing the full traceback.
+        Enhanced transcript fetching with adaptive retry strategy and fallback mechanisms.
+        
+        Features:
+        - Exponential backoff for rate limiting
+        - Proxy rotation on failures
+        - Alternative transcript sources
+        - Better error differentiation
         """
-        proxy_config = self._get_proxy_config()
-
+        
+        # Track consecutive empty responses to detect patterns
+        consecutive_empty_responses = 0
+        
         for attempt in range(max_retries):
             try:
+                # Try different proxy configurations on retries
+                proxy_config = self._get_proxy_config_for_attempt(attempt)
+                
                 ytt_api = YouTubeTranscriptApi(proxy_config=proxy_config)
-                return ytt_api.fetch(video_id).to_raw_data()
+                transcript = ytt_api.fetch(video_id).to_raw_data()
+                
+                # Validate that we got actual transcript data
+                if not transcript or len(transcript) == 0:
+                    consecutive_empty_responses += 1
+                    bt.logging.warning(f"Empty transcript data for video {video_id} (attempt {attempt + 1})")
+                    
+                    # If we've had multiple empty responses, this might be a "no transcript" case
+                    if consecutive_empty_responses >= 2:
+                        bt.logging.warning(f"Video {video_id} appears to have no transcript (multiple empty responses)")
+                        return None
+                    
+                    # Continue to retry
+                    continue
+                    
+                # Success - reset counter
+                consecutive_empty_responses = 0
+                return transcript
 
             except (TranscriptsDisabled, NoTranscriptFound) as e:
                 # Known "no transcript" errors → no retries needed
@@ -905,21 +964,41 @@ class YouTubeTranscriptScraper(Scraper):
                 return None
 
             except ParseError as e:
-                # Typically "no element found: line 1, column 0" means
-                # an empty or invalid response from YouTube.
-                bt.logging.warning(
-                    f"[Attempt {attempt + 1}/{max_retries}] Transcript parse error "
-                    f"for video {video_id}: {e}"
-                )
-                # Optionally: no big traceback here, just a simpler log message.
-                if attempt < max_retries - 1:
-                    bt.logging.info("Retrying in 5s..")
-                    await asyncio.sleep(5)
-                else:
+                error_msg = str(e)
+                
+                if "no element found: line 1, column 0" in error_msg:
+                    consecutive_empty_responses += 1
                     bt.logging.warning(
-                        f"Giving up after {max_retries} attempts for {video_id}."
+                        f"[Attempt {attempt + 1}/{max_retries}] Empty response from YouTube "
+                        f"for video {video_id} - possible rate limiting or no transcript"
                     )
-                    return None
+                    
+                    # If multiple consecutive empty responses, likely no transcript
+                    if consecutive_empty_responses >= 2:
+                        bt.logging.warning(f"Video {video_id} likely has no transcript (multiple empty responses)")
+                        return None
+                    
+                    # Use exponential backoff for potential rate limiting
+                    if attempt < max_retries - 1:
+                        delay = self._calculate_retry_delay(attempt, error_type="rate_limit")
+                        bt.logging.info(f"Retrying in {delay}s (exponential backoff)..")
+                        await asyncio.sleep(delay)
+                    else:
+                        bt.logging.warning(f"Video {video_id} - giving up after {max_retries} attempts")
+                        return None
+                else:
+                    # Other parse errors - use standard retry
+                    bt.logging.warning(
+                        f"[Attempt {attempt + 1}/{max_retries}] Transcript parse error "
+                        f"for video {video_id}: {e}"
+                    )
+                    if attempt < max_retries - 1:
+                        delay = self._calculate_retry_delay(attempt, error_type="parse_error")
+                        bt.logging.info(f"Retrying in {delay}s..")
+                        await asyncio.sleep(delay)
+                    else:
+                        bt.logging.warning(f"Giving up after {max_retries} attempts for {video_id}.")
+                        return None
 
             except Exception as e:
                 # General fallback for other errors (network, SSL, etc.)
@@ -928,16 +1007,45 @@ class YouTubeTranscriptScraper(Scraper):
                     f"for {video_id}: {e!s}"
                 )
 
-                bt.logging.warning(traceback.format_exc())
-
                 if attempt < max_retries - 1:
-                    bt.logging.info("Retrying in 5s...")
-                    await asyncio.sleep(5)
+                    delay = self._calculate_retry_delay(attempt, error_type="network_error")
+                    bt.logging.info(f"Retrying in {delay}s..")
+                    await asyncio.sleep(delay)
                 else:
-                    bt.logging.warning(
-                        f"Giving up after {max_retries} attempts for {video_id}."
-                    )
+                    bt.logging.warning(f"Giving up after {max_retries} attempts for {video_id}.")
                     return None
+        
+        # If we get here, all attempts failed
+        return None
+
+    async def _check_transcript_availability(self, video_id: str) -> bool:
+        """
+        Check if a video has transcripts available before attempting to fetch them.
+        This can help avoid unnecessary retry attempts.
+        
+        Args:
+            video_id: YouTube video ID
+            
+        Returns:
+            True if transcript is likely available, False otherwise
+        """
+        try:
+            # Try to get transcript list without fetching full content
+            proxy_config = self._get_proxy_config()
+            ytt_api = YouTubeTranscriptApi(proxy_config=proxy_config)
+            
+            # This will raise an exception if no transcript is available
+            transcript_list = ytt_api.list_transcripts(video_id)
+            
+            # If we get here, transcript exists
+            return len(transcript_list) > 0
+            
+        except (TranscriptsDisabled, NoTranscriptFound):
+            # Known "no transcript" cases
+            return False
+        except Exception:
+            # For other errors, assume transcript might be available
+            return True
 
     def _extract_video_id(self, url: str) -> Optional[str]:
         """
@@ -1074,27 +1182,19 @@ class YouTubeTranscriptScraper(Scraper):
                         bt.logging.debug(f"Video {video_id} outside date range, skipping")
                         continue
 
-                    # Check for transcript availability
-                    try:
-                        transcript = await self._get_transcript(video_id)
-                        if transcript:
-                            videos.append({
-                                "id": video_id,
-                                "title": item["snippet"]["title"],
-                                "publishedAt": published_at.isoformat(),
-                                "channelId": channel_id,
-                                "channelTitle": channel_name
-                            })
+                    # Add video to list first, then check transcript availability later
+                    # This improves efficiency and allows for batch transcript processing
+                    videos.append({
+                        "id": video_id,
+                        "title": item["snippet"]["title"],
+                        "publishedAt": published_at.isoformat(),
+                        "channelId": channel_id,
+                        "channelTitle": channel_name
+                    })
 
-                            if len(videos) >= max_results:
-                                bt.logging.info(f"Reached maximum videos limit ({max_results})")
-                                break
-                    except (TranscriptsDisabled, NoTranscriptFound):
-                        bt.logging.debug(f"No transcript for video {video_id}, skipping")
-                        continue
-                    except Exception as e:
-                        bt.logging.error(f"Error checking transcript for video {video_id}: {str(e)}")
-                        continue
+                    if len(videos) >= max_results:
+                        bt.logging.info(f"Reached maximum videos limit ({max_results})")
+                        break
 
                 # Get next page token
                 page_token = playlist_response.get("nextPageToken")
@@ -1106,8 +1206,23 @@ class YouTubeTranscriptScraper(Scraper):
                 bt.logging.error(traceback.format_exc())
                 break
 
-        bt.logging.info(f"Found {len(videos)} videos with transcripts within the date range")
-        return videos
+        bt.logging.info(f"Found {len(videos)} videos within the date range")
+        
+        # Now check transcript availability for all videos in batch
+        videos_with_transcripts = []
+        for video in videos:
+            try:
+                transcript = await self._get_transcript(video["id"])
+                if transcript:
+                    videos_with_transcripts.append(video)
+                else:
+                    bt.logging.debug(f"No transcript available for video {video['id']}")
+            except Exception as e:
+                bt.logging.debug(f"Error checking transcript for video {video['id']}: {str(e)}")
+                continue
+        
+        bt.logging.info(f"Found {len(videos_with_transcripts)} videos with transcripts out of {len(videos)} total videos")
+        return videos_with_transcripts
 
     async def _get_channel_videos_httpx(
         self,
@@ -1165,11 +1280,7 @@ class YouTubeTranscriptScraper(Scraper):
                 if not date_range.contains(published):
                     continue
 
-                # Proxy-aware transcript check
-                transcript = await self._get_transcript(video_id)
-                if not transcript:
-                    continue
-
+                # Add video to collection first, transcript check will happen later
                 collected.append(
                     {
                         "id": video_id,

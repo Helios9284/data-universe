@@ -188,7 +188,7 @@ def add_args(neuron_type: NeuronType, parser):
             help="Hint for the size of the database to target in GBs. Expect additional some additional overhead.",
             # We intentionally choose a large default to avoid Miner's accidentally deleting data when they
             # run with the default value.
-            default=250,
+            default=500,
         )
 
         root_dir = Path(os.path.dirname(__file__)).parent
@@ -225,7 +225,7 @@ def add_args(neuron_type: NeuronType, parser):
             "--gravity",
             action="store_true",
             help="Set this flag to true to retrieve updated desirabilities, stored in total.json",
-            default=False
+            default=True
         )
 
         parser.add_argument(

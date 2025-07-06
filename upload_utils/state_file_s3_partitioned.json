@@ -1,0 +1,818 @@
+{
+  "default_0": {
+    "last_offset": 12675,
+    "total_records_processed": 12675,
+    "last_processed_time": "2025-07-06T08:48:16.339199",
+    "processing_completed": false
+  },
+  "default_1": {
+    "last_offset": 266,
+    "total_records_processed": 266,
+    "last_processed_time": "2025-07-06T05:45:48.027552",
+    "processing_completed": false
+  },
+  "default_2": {
+    "last_offset": 336,
+    "total_records_processed": 336,
+    "last_processed_time": "2025-07-06T08:48:16.781394",
+    "processing_completed": false
+  },
+  "default_3": {
+    "last_offset": 1509,
+    "total_records_processed": 1509,
+    "last_processed_time": "2025-07-06T08:48:17.185865",
+    "processing_completed": false
+  },
+  "default_4": {
+    "last_offset": 9109,
+    "total_records_processed": 9109,
+    "last_processed_time": "2025-07-06T08:48:17.611234",
+    "processing_completed": false
+  },
+  "default_5": {
+    "last_offset": 3338,
+    "total_records_processed": 3338,
+    "last_processed_time": "2025-07-06T08:48:17.989868",
+    "processing_completed": false
+  },
+  "default_6": {
+    "last_offset": 127,
+    "total_records_processed": 127,
+    "last_processed_time": "2025-07-06T08:48:18.380475",
+    "processing_completed": false
+  },
+  "default_7": {
+    "last_offset": 683,
+    "total_records_processed": 683,
+    "last_processed_time": "2025-07-06T08:48:18.817894",
+    "processing_completed": false
+  },
+  "default_8": {
+    "last_offset": 22090,
+    "total_records_processed": 22090,
+    "last_processed_time": "2025-07-06T08:48:19.257604",
+    "processing_completed": false
+  },
+  "default_9": {
+    "last_offset": 1115,
+    "total_records_processed": 1115,
+    "last_processed_time": "2025-07-06T08:48:19.619915",
+    "processing_completed": false
+  },
+  "default_10": {
+    "last_offset": 2302,
+    "total_records_processed": 2302,
+    "last_processed_time": "2025-07-06T07:47:40.721400",
+    "processing_completed": false
+  },
+  "default_11": {
+    "last_offset": 14,
+    "total_records_processed": 14,
+    "last_processed_time": "2025-07-06T05:45:54.908824",
+    "processing_completed": false
+  },
+  "default_12": {
+    "last_offset": 183,
+    "total_records_processed": 183,
+    "last_processed_time": "2025-07-06T05:45:55.337478",
+    "processing_completed": false
+  },
+  "default_13": {
+    "last_offset": 1802,
+    "total_records_processed": 1802,
+    "last_processed_time": "2025-07-06T05:45:55.964069",
+    "processing_completed": false
+  },
+  "default_14": {
+    "last_offset": 1360,
+    "total_records_processed": 1360,
+    "last_processed_time": "2025-07-06T08:48:20.254648",
+    "processing_completed": false
+  },
+  "default_15": {
+    "last_offset": 1382,
+    "total_records_processed": 1382,
+    "last_processed_time": "2025-07-06T05:45:57.173673",
+    "processing_completed": false
+  },
+  "default_16": {
+    "last_offset": 93,
+    "total_records_processed": 93,
+    "last_processed_time": "2025-07-06T05:45:57.537546",
+    "processing_completed": false
+  },
+  "default_17": {
+    "last_offset": 1093,
+    "total_records_processed": 1093,
+    "last_processed_time": "2025-07-06T05:45:58.110725",
+    "processing_completed": false
+  },
+  "default_18": {
+    "last_offset": 150,
+    "total_records_processed": 150,
+    "last_processed_time": "2025-07-06T05:45:58.565631",
+    "processing_completed": false
+  },
+  "crawler-2-vapyssa3crufaj12-jk7g": {
+    "last_offset": 199,
+    "total_records_processed": 199,
+    "last_processed_time": "2025-07-06T05:45:59.308380",
+    "processing_completed": false
+  },
+  "crawler-7-vapyssa3crufaj12-jk7g": {
+    "last_offset": 215,
+    "total_records_processed": 215,
+    "last_processed_time": "2025-07-06T06:47:04.681105",
+    "processing_completed": false
+  },
+  "crawler-5-vapyssa3crufaj12-jk7g": {
+    "last_offset": 440,
+    "total_records_processed": 440,
+    "last_processed_time": "2025-07-06T05:46:00.226872",
+    "processing_completed": false
+  },
+  "crawler-6-vapyssa3crufaj12-jk7g": {
+    "last_offset": 209,
+    "total_records_processed": 209,
+    "last_processed_time": "2025-07-06T05:46:00.669044",
+    "processing_completed": false
+  },
+  "crawler-0-vapyssa3crufaj12-jk7g": {
+    "last_offset": 386,
+    "total_records_processed": 386,
+    "last_processed_time": "2025-07-06T08:48:21.362713",
+    "processing_completed": false
+  },
+  "crawler-4-vapyssa3crufaj12-jk7g": {
+    "last_offset": 209,
+    "total_records_processed": 209,
+    "last_processed_time": "2025-07-06T08:48:21.724670",
+    "processing_completed": false
+  },
+  "crawler-8-vapyssa3crufaj12-jk7g": {
+    "last_offset": 200,
+    "total_records_processed": 200,
+    "last_processed_time": "2025-07-06T05:46:02.099351",
+    "processing_completed": false
+  },
+  "crawler-15-vapyssa3crufaj12-jk7g": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T05:46:02.715848",
+    "processing_completed": false
+  },
+  "crawler-13-vapyssa3crufaj12-jk7g": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T05:46:03.035301",
+    "processing_completed": false
+  },
+  "crawler-1-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 254,
+    "total_records_processed": 254,
+    "last_processed_time": "2025-07-06T07:47:43.474175",
+    "processing_completed": false
+  },
+  "crawler-4-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 200,
+    "total_records_processed": 200,
+    "last_processed_time": "2025-07-06T05:46:03.996549",
+    "processing_completed": false
+  },
+  "crawler-3-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 262,
+    "total_records_processed": 262,
+    "last_processed_time": "2025-07-06T07:47:43.936077",
+    "processing_completed": false
+  },
+  "crawler-14-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 199,
+    "total_records_processed": 199,
+    "last_processed_time": "2025-07-06T05:46:05.019294",
+    "processing_completed": false
+  },
+  "crawler-5-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 204,
+    "total_records_processed": 204,
+    "last_processed_time": "2025-07-06T08:48:22.993093",
+    "processing_completed": false
+  },
+  "crawler-9-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 435,
+    "total_records_processed": 435,
+    "last_processed_time": "2025-07-06T08:48:23.362678",
+    "processing_completed": false
+  },
+  "crawler-10-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 359,
+    "total_records_processed": 359,
+    "last_processed_time": "2025-07-06T08:48:23.814294",
+    "processing_completed": false
+  },
+  "crawler-6-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 209,
+    "total_records_processed": 209,
+    "last_processed_time": "2025-07-06T08:48:24.180422",
+    "processing_completed": false
+  },
+  "crawler-7-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 215,
+    "total_records_processed": 215,
+    "last_processed_time": "2025-07-06T08:48:24.543397",
+    "processing_completed": false
+  },
+  "crawler-11-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 386,
+    "total_records_processed": 386,
+    "last_processed_time": "2025-07-06T05:46:07.694869",
+    "processing_completed": false
+  },
+  "crawler-8-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 200,
+    "total_records_processed": 200,
+    "last_processed_time": "2025-07-06T05:46:08.231952",
+    "processing_completed": false
+  },
+  "crawler-13-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 100,
+    "total_records_processed": 100,
+    "last_processed_time": "2025-07-06T05:46:08.693059",
+    "processing_completed": false
+  },
+  "crawler-20-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T05:46:09.297080",
+    "processing_completed": false
+  },
+  "crawler-22-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 1893,
+    "total_records_processed": 1893,
+    "last_processed_time": "2025-07-06T05:46:09.981770",
+    "processing_completed": false
+  },
+  "crawler-25-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 146,
+    "total_records_processed": 146,
+    "last_processed_time": "2025-07-06T08:48:25.620805",
+    "processing_completed": false
+  },
+  "crawler-32-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 150,
+    "total_records_processed": 150,
+    "last_processed_time": "2025-07-06T08:48:26.127310",
+    "processing_completed": false
+  },
+  "crawler-30-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T05:46:11.352578",
+    "processing_completed": false
+  },
+  "crawler-0-refivuzfl0njxzywrfqms": {
+    "last_offset": 217,
+    "total_records_processed": 217,
+    "last_processed_time": "2025-07-06T08:48:27.022120",
+    "processing_completed": false
+  },
+  "crawler-1-r78iq9ojeemy3l03x7fn6": {
+    "last_offset": 201,
+    "total_records_processed": 201,
+    "last_processed_time": "2025-07-06T05:46:12.289140",
+    "processing_completed": false
+  },
+  "crawler-2-r78iq9ojeemy3l03x7fn6": {
+    "last_offset": 256,
+    "total_records_processed": 256,
+    "last_processed_time": "2025-07-06T07:47:46.664718",
+    "processing_completed": false
+  },
+  "crawler-3-r78iq9ojeemy3l03x7fn6": {
+    "last_offset": 258,
+    "total_records_processed": 258,
+    "last_processed_time": "2025-07-06T07:47:47.034949",
+    "processing_completed": false
+  },
+  "crawler-0-r78iq9ojeemy3l03x7fn6": {
+    "last_offset": 236,
+    "total_records_processed": 236,
+    "last_processed_time": "2025-07-06T08:48:27.582027",
+    "processing_completed": false
+  },
+  "crawler-8-r78iq9ojeemy3l03x7fn6": {
+    "last_offset": 1,
+    "total_records_processed": 1,
+    "last_processed_time": "2025-07-06T05:46:14.209479",
+    "processing_completed": false
+  },
+  "crawler-5-r78iq9ojeemy3l03x7fn6": {
+    "last_offset": 344,
+    "total_records_processed": 344,
+    "last_processed_time": "2025-07-06T07:47:47.982707",
+    "processing_completed": false
+  },
+  "crawler-12-r78iq9ojeemy3l03x7fn6": {
+    "last_offset": 148,
+    "total_records_processed": 148,
+    "last_processed_time": "2025-07-06T06:47:11.167588",
+    "processing_completed": false
+  },
+  "crawler-11-r78iq9ojeemy3l03x7fn6": {
+    "last_offset": 74,
+    "total_records_processed": 74,
+    "last_processed_time": "2025-07-06T05:46:15.573410",
+    "processing_completed": false
+  },
+  "crawler-10-r78iq9ojeemy3l03x7fn6": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T05:46:16.041854",
+    "processing_completed": false
+  },
+  "crawler-16-r78iq9ojeemy3l03x7fn6": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T05:46:16.493472",
+    "processing_completed": false
+  },
+  "crawler-7-0bjrzc4gvaiqu2bey7abe": {
+    "last_offset": 325,
+    "total_records_processed": 325,
+    "last_processed_time": "2025-07-06T06:47:12.384985",
+    "processing_completed": false
+  },
+  "crawler-6-0bjrzc4gvaiqu2bey7abe": {
+    "last_offset": 240,
+    "total_records_processed": 240,
+    "last_processed_time": "2025-07-06T05:46:17.859107",
+    "processing_completed": false
+  },
+  "crawler-5-0bjrzc4gvaiqu2bey7abe": {
+    "last_offset": 100,
+    "total_records_processed": 100,
+    "last_processed_time": "2025-07-06T05:46:18.313846",
+    "processing_completed": false
+  },
+  "crawler-8-0bjrzc4gvaiqu2bey7abe": {
+    "last_offset": 210,
+    "total_records_processed": 210,
+    "last_processed_time": "2025-07-06T08:48:28.923819",
+    "processing_completed": false
+  },
+  "crawler-9-0bjrzc4gvaiqu2bey7abe": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T05:46:19.102601",
+    "processing_completed": false
+  },
+  "crawler-0-sngikjbrw0liy1jntx-ow": {
+    "last_offset": 1,
+    "total_records_processed": 1,
+    "last_processed_time": "2025-07-06T05:46:19.456031",
+    "processing_completed": false
+  },
+  "crawler-2-sngikjbrw0liy1jntx-ow": {
+    "last_offset": 2,
+    "total_records_processed": 2,
+    "last_processed_time": "2025-07-06T05:46:19.762907",
+    "processing_completed": false
+  },
+  "crawler-0-hu0fmdzpxcylsz1xiyndu": {
+    "last_offset": 100,
+    "total_records_processed": 100,
+    "last_processed_time": "2025-07-06T06:47:13.286663",
+    "processing_completed": false
+  },
+  "crawler-2-hu0fmdzpxcylsz1xiyndu": {
+    "last_offset": 295,
+    "total_records_processed": 295,
+    "last_processed_time": "2025-07-06T08:48:29.699449",
+    "processing_completed": false
+  },
+  "crawler-1-hu0fmdzpxcylsz1xiyndu": {
+    "last_offset": 101,
+    "total_records_processed": 101,
+    "last_processed_time": "2025-07-06T05:46:21.098501",
+    "processing_completed": false
+  },
+  "crawler-1-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
+    "last_offset": 9109,
+    "total_records_processed": 9109,
+    "last_processed_time": "2025-07-06T08:48:30.155614",
+    "processing_completed": false
+  },
+  "crawler-9-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T05:46:22.470792",
+    "processing_completed": false
+  },
+  "crawler-0-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
+    "last_offset": 202,
+    "total_records_processed": 202,
+    "last_processed_time": "2025-07-06T06:47:14.530266",
+    "processing_completed": false
+  },
+  "crawler-8-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
+    "last_offset": 200,
+    "total_records_processed": 200,
+    "last_processed_time": "2025-07-06T08:48:30.661164",
+    "processing_completed": false
+  },
+  "crawler-6-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
+    "last_offset": 200,
+    "total_records_processed": 200,
+    "last_processed_time": "2025-07-06T05:46:23.670355",
+    "processing_completed": false
+  },
+  "crawler-18-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T05:46:24.015013",
+    "processing_completed": false
+  },
+  "crawler-13-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T05:46:24.361592",
+    "processing_completed": false
+  },
+  "crawler-5-d9649fb7-63d3-4fe4-b352-b1bffe80c971": {
+    "last_offset": 203,
+    "total_records_processed": 203,
+    "last_processed_time": "2025-07-06T07:47:51.510884",
+    "processing_completed": false
+  },
+  "crawler-3-d9649fb7-63d3-4fe4-b352-b1bffe80c971": {
+    "last_offset": 18,
+    "total_records_processed": 18,
+    "last_processed_time": "2025-07-06T05:46:25.461525",
+    "processing_completed": false
+  },
+  "crawler-7-d9649fb7-63d3-4fe4-b352-b1bffe80c971": {
+    "last_offset": 74,
+    "total_records_processed": 74,
+    "last_processed_time": "2025-07-06T05:46:25.813183",
+    "processing_completed": false
+  },
+  "crawler-6-d9649fb7-63d3-4fe4-b352-b1bffe80c971": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T05:46:26.174763",
+    "processing_completed": false
+  },
+  "crawler-9-d9649fb7-63d3-4fe4-b352-b1bffe80c971": {
+    "last_offset": 225,
+    "total_records_processed": 225,
+    "last_processed_time": "2025-07-06T07:47:52.265113",
+    "processing_completed": false
+  },
+  "crawler-0-1ad594ea-9a96-4626-baf3-df76920c5b01": {
+    "last_offset": 12675,
+    "total_records_processed": 12675,
+    "last_processed_time": "2025-07-06T08:48:32.837597",
+    "processing_completed": false
+  },
+  "crawler-7-1ad594ea-9a96-4626-baf3-df76920c5b01": {
+    "last_offset": 202,
+    "total_records_processed": 202,
+    "last_processed_time": "2025-07-06T08:48:33.559115",
+    "processing_completed": false
+  },
+  "crawler-2-1ad594ea-9a96-4626-baf3-df76920c5b01": {
+    "last_offset": 206,
+    "total_records_processed": 206,
+    "last_processed_time": "2025-07-06T05:46:28.701892",
+    "processing_completed": false
+  },
+  "crawler-3-1ad594ea-9a96-4626-baf3-df76920c5b01": {
+    "last_offset": 3338,
+    "total_records_processed": 3338,
+    "last_processed_time": "2025-07-06T08:48:33.993745",
+    "processing_completed": false
+  },
+  "crawler-5-1ad594ea-9a96-4626-baf3-df76920c5b01": {
+    "last_offset": 100,
+    "total_records_processed": 100,
+    "last_processed_time": "2025-07-06T05:46:30.236137",
+    "processing_completed": false
+  },
+  "crawler-6-1ad594ea-9a96-4626-baf3-df76920c5b01": {
+    "last_offset": 200,
+    "total_records_processed": 200,
+    "last_processed_time": "2025-07-06T05:46:30.664353",
+    "processing_completed": false
+  },
+  "crawler-8-1ad594ea-9a96-4626-baf3-df76920c5b01": {
+    "last_offset": 273,
+    "total_records_processed": 273,
+    "last_processed_time": "2025-07-06T07:47:54.505434",
+    "processing_completed": false
+  },
+  "crawler-18-1ad594ea-9a96-4626-baf3-df76920c5b01": {
+    "last_offset": 147,
+    "total_records_processed": 147,
+    "last_processed_time": "2025-07-06T05:46:31.498288",
+    "processing_completed": false
+  },
+  "crawler-16-1ad594ea-9a96-4626-baf3-df76920c5b01": {
+    "last_offset": 269,
+    "total_records_processed": 269,
+    "last_processed_time": "2025-07-06T05:46:32.243073",
+    "processing_completed": false
+  },
+  "crawler-2-c77e3b8f-f547-4735-a94f-965917bc1f22": {
+    "last_offset": 200,
+    "total_records_processed": 200,
+    "last_processed_time": "2025-07-06T05:46:32.819298",
+    "processing_completed": false
+  },
+  "crawler-1-c77e3b8f-f547-4735-a94f-965917bc1f22": {
+    "last_offset": 51,
+    "total_records_processed": 51,
+    "last_processed_time": "2025-07-06T08:48:35.119202",
+    "processing_completed": false
+  },
+  "crawler-0-rldhawtaeabtwjhlsxwq-": {
+    "last_offset": 297,
+    "total_records_processed": 297,
+    "last_processed_time": "2025-07-06T08:48:35.604851",
+    "processing_completed": false
+  },
+  "crawler-1-rldhawtaeabtwjhlsxwq-": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T05:46:34.196039",
+    "processing_completed": false
+  },
+  "crawler-0-pmflewiz4acvdkcxf4fht": {
+    "last_offset": 305,
+    "total_records_processed": 305,
+    "last_processed_time": "2025-07-06T08:48:36.070028",
+    "processing_completed": false
+  },
+  "crawler-1-pmflewiz4acvdkcxf4fht": {
+    "last_offset": 516,
+    "total_records_processed": 516,
+    "last_processed_time": "2025-07-06T07:47:56.283611",
+    "processing_completed": false
+  },
+  "crawler-1-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 195,
+    "total_records_processed": 195,
+    "last_processed_time": "2025-07-06T08:48:36.886615",
+    "processing_completed": false
+  },
+  "crawler-2-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 200,
+    "total_records_processed": 200,
+    "last_processed_time": "2025-07-06T05:46:36.009507",
+    "processing_completed": false
+  },
+  "crawler-0-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 344,
+    "total_records_processed": 344,
+    "last_processed_time": "2025-07-06T07:47:56.830369",
+    "processing_completed": false
+  },
+  "crawler-3-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 53,
+    "total_records_processed": 53,
+    "last_processed_time": "2025-07-06T13:25:14.052625",
+    "processing_completed": false
+  },
+  "crawler-5-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 410,
+    "total_records_processed": 410,
+    "last_processed_time": "2025-07-06T05:46:37.329423",
+    "processing_completed": false
+  },
+  "crawler-6-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 260,
+    "total_records_processed": 260,
+    "last_processed_time": "2025-07-06T08:48:37.563747",
+    "processing_completed": false
+  },
+  "crawler-7-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 444,
+    "total_records_processed": 444,
+    "last_processed_time": "2025-07-06T08:48:37.921234",
+    "processing_completed": false
+  },
+  "crawler-4-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 407,
+    "total_records_processed": 407,
+    "last_processed_time": "2025-07-06T08:48:38.286101",
+    "processing_completed": false
+  },
+  "crawler-8-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 100,
+    "total_records_processed": 100,
+    "last_processed_time": "2025-07-06T07:47:57.901050",
+    "processing_completed": false
+  },
+  "crawler-12-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 348,
+    "total_records_processed": 348,
+    "last_processed_time": "2025-07-06T07:47:58.252989",
+    "processing_completed": false
+  },
+  "crawler-11-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 100,
+    "total_records_processed": 100,
+    "last_processed_time": "2025-07-06T05:46:40.024696",
+    "processing_completed": false
+  },
+  "crawler-9-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 200,
+    "total_records_processed": 200,
+    "last_processed_time": "2025-07-06T05:46:40.961932",
+    "processing_completed": false
+  },
+  "crawler-14-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 225,
+    "total_records_processed": 225,
+    "last_processed_time": "2025-07-06T05:46:41.511792",
+    "processing_completed": false
+  },
+  "crawler-5-ulbcgagepvuowavmzrnd2": {
+    "last_offset": 2,
+    "total_records_processed": 2,
+    "last_processed_time": "2025-07-06T05:46:42.532987",
+    "processing_completed": false
+  },
+  "crawler-4-ulbcgagepvuowavmzrnd2": {
+    "last_offset": 202,
+    "total_records_processed": 202,
+    "last_processed_time": "2025-07-06T07:48:00.211998",
+    "processing_completed": false
+  },
+  "crawler-6-ulbcgagepvuowavmzrnd2": {
+    "last_offset": 181,
+    "total_records_processed": 181,
+    "last_processed_time": "2025-07-06T06:47:23.350916",
+    "processing_completed": false
+  },
+  "crawler-12-ulbcgagepvuowavmzrnd2": {
+    "last_offset": 96,
+    "total_records_processed": 96,
+    "last_processed_time": "2025-07-06T05:46:43.986882",
+    "processing_completed": false
+  },
+  "crawler-14-ulbcgagepvuowavmzrnd2": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T05:46:44.723000",
+    "processing_completed": false
+  },
+  "crawler-20-ulbcgagepvuowavmzrnd2": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T05:46:45.168281",
+    "processing_completed": false
+  },
+  "crawler-16-ulbcgagepvuowavmzrnd2": {
+    "last_offset": 148,
+    "total_records_processed": 148,
+    "last_processed_time": "2025-07-06T05:46:45.578218",
+    "processing_completed": false
+  },
+  "crawler-3-ulbcgagepvuowavmzrnd2": {
+    "last_offset": 200,
+    "total_records_processed": 200,
+    "last_processed_time": "2025-07-06T05:46:45.992574",
+    "processing_completed": false
+  },
+  "crawler-26-ulbcgagepvuowavmzrnd2": {
+    "last_offset": 74,
+    "total_records_processed": 74,
+    "last_processed_time": "2025-07-06T05:46:46.363362",
+    "processing_completed": false
+  },
+  "crawler-15-ulbcgagepvuowavmzrnd2": {
+    "last_offset": 74,
+    "total_records_processed": 74,
+    "last_processed_time": "2025-07-06T05:46:46.719136",
+    "processing_completed": false
+  },
+  "crawler-23-ulbcgagepvuowavmzrnd2": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T05:46:47.248064",
+    "processing_completed": false
+  },
+  "crawler-0-tgv-lw2aqhsbvilzk3bcq": {
+    "last_offset": 387,
+    "total_records_processed": 387,
+    "last_processed_time": "2025-07-06T07:48:01.619279",
+    "processing_completed": false
+  },
+  "crawler-27-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T06:47:08.582932",
+    "processing_completed": false
+  },
+  "crawler-17-r78iq9ojeemy3l03x7fn6": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T06:47:11.936039",
+    "processing_completed": false
+  },
+  "crawler-17-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
+    "last_offset": 150,
+    "total_records_processed": 150,
+    "last_processed_time": "2025-07-06T08:48:31.192610",
+    "processing_completed": false
+  },
+  "crawler-10-d9649fb7-63d3-4fe4-b352-b1bffe80c971": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T06:47:16.117250",
+    "processing_completed": false
+  },
+  "crawler-17-1ad594ea-9a96-4626-baf3-df76920c5b01": {
+    "last_offset": 137,
+    "total_records_processed": 137,
+    "last_processed_time": "2025-07-06T06:47:18.407886",
+    "processing_completed": false
+  },
+  "crawler-23-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T06:47:22.456716",
+    "processing_completed": false
+  },
+  "crawler-8-ulbcgagepvuowavmzrnd2": {
+    "last_offset": 58,
+    "total_records_processed": 58,
+    "last_processed_time": "2025-07-06T06:47:23.921799",
+    "processing_completed": false
+  },
+  "crawler-16-vapyssa3crufaj12-jk7g": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T07:47:42.917288",
+    "processing_completed": false
+  },
+  "crawler-15-r78iq9ojeemy3l03x7fn6": {
+    "last_offset": 74,
+    "total_records_processed": 74,
+    "last_processed_time": "2025-07-06T07:47:48.508110",
+    "processing_completed": false
+  },
+  "crawler-10-sngikjbrw0liy1jntx-ow": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T07:47:49.786605",
+    "processing_completed": false
+  },
+  "crawler-4-1ad594ea-9a96-4626-baf3-df76920c5b01": {
+    "last_offset": 101,
+    "total_records_processed": 101,
+    "last_processed_time": "2025-07-06T08:48:33.203762",
+    "processing_completed": false
+  },
+  "crawler-8-c77e3b8f-f547-4735-a94f-965917bc1f22": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T07:47:55.383519",
+    "processing_completed": false
+  },
+  "crawler-13-ulbcgagepvuowavmzrnd2": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T07:47:59.692544",
+    "processing_completed": false
+  },
+  "crawler-1-refivuzfl0njxzywrfqms": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T08:48:26.641186",
+    "processing_completed": false
+  },
+  "crawler-2-pmflewiz4acvdkcxf4fht": {
+    "last_offset": 74,
+    "total_records_processed": 74,
+    "last_processed_time": "2025-07-06T08:48:36.508692",
+    "processing_completed": false
+  },
+  "crawler-16-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T08:48:38.930991",
+    "processing_completed": false
+  },
+  "crawler-24-ulbcgagepvuowavmzrnd2": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T08:48:41.588423",
+    "processing_completed": false
+  },
+  "default_21": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T09:41:30.544606",
+    "processing_completed": false
+  }
+}

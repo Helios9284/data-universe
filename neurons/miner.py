@@ -36,7 +36,7 @@ from common.protocol import (
 )
 
 from scraping.config.config_reader import ConfigReader
-from scraping.coordinator import ScraperCoordinator
+from scraping.coordinator import ScraperCoordinator, ParallelScraperCoordinator
 from scraping.provider import ScraperProvider
 from storage.miner.sqlite_miner_storage import SqliteMinerStorage
 from neurons.config import NeuronType, check_config, create_config
@@ -50,7 +50,9 @@ from common.protocol import OnDemandRequest
 from common.date_range import DateRange
 from scraping.scraper import ScrapeConfig, ScraperId
 
-from scraping.x.enhanced_apidojo_scraper import EnhancedApiDojoTwitterScraper
+# from scraping.x.enhanced_apidojo_scraper import EnhancedApiDojoTwitterScraper
+from scraping.x.enhanced_twitterapi_scraper import EnhancedTwitterApiScraper
+
 import json
 
 # Enable logging to the miner TODO move it to some different location
@@ -189,10 +191,17 @@ class Miner:
         )
         bt.logging.success(f"Loaded scraping config: {scraping_config}.")
 
-        self.scraping_coordinator = ScraperCoordinator(
+        # self.scraping_coordinator = ScraperCoordinator(
+        self.scraping_coordinator = ParallelScraperCoordinator(
             scraper_provider=ScraperProvider(),
             miner_storage=self.storage,
             config=scraping_config,
+            enable_parallel_processing=True,
+            cpu_allocation={
+                "X.apidojo": 1,           # Twitter gets 1 CPU
+                "Reddit.custom": 2,       # Reddit gets 2 CPUs (for 2 APIs)
+                "YouTube.custom.transcript": 1  # YouTube gets 1 CPU
+            }
         )
 
         # Configure per hotkey per request limits.
@@ -272,6 +281,9 @@ class Miner:
                     hf_metadata_list = self.hf_uploader.upload_sql_to_huggingface()
                     if hf_metadata_list:
                         self.storage.store_hf_dataset_info(hf_metadata_list)
+                        bt.logging.success(f"Successfully uploaded {len(hf_metadata_list)} HF datasets")
+                    else:
+                        bt.logging.warning("No HF data uploaded - check data availability")
             except Exception:
                 bt.logging.error(traceback.format_exc())
 
@@ -281,7 +293,7 @@ class Miner:
     def upload_s3_partitioned(self):
         """Upload DD data to S3 in partitioned format"""
         # Wait 10 minutes before starting first upload
-        time_sleep_val = dt.timedelta(minutes=30).total_seconds()
+        time_sleep_val = dt.timedelta(minutes=15).total_seconds()
         time.sleep(time_sleep_val)
 
         while not self.should_exit:
@@ -296,7 +308,7 @@ class Miner:
                 bt.logging.error(traceback.format_exc())
 
             # Upload every 2 hours (more frequent than HF since it's smaller, focused dataset)
-            time_sleep_val = dt.timedelta(hours=2).total_seconds()
+            time_sleep_val = dt.timedelta(hours=1).total_seconds()
             time.sleep(time_sleep_val)
 
     def run(self):
@@ -393,6 +405,12 @@ class Miner:
             )
             self.s3_partitioned_thread.start()
 
+            #deduplication_cleanup_thread
+            self.deduplication_cleanup_thread = threading.Thread(
+                target=self._deduplication_cleanup_loop, daemon=True
+            )
+            self.deduplication_cleanup_thread.start()
+
             self.is_running = True
             bt.logging.debug("Started")
 
@@ -407,6 +425,8 @@ class Miner:
             self.compressed_index_refresh_thread.join(5)
             self.s3_partitioned_thread.join(5)
             self.lookup_thread.join(5)
+            if hasattr(self, 'deduplication_cleanup_thread'):
+                self.deduplication_cleanup_thread.join(5)
             self.is_running = False
             bt.logging.debug("Stopped")
 
@@ -638,11 +658,13 @@ class Miner:
             if synapse.source == DataSource.X:
                 # Initialize the enhanced scraper directly instead of using the provider
 
-                enhanced_scraper = EnhancedApiDojoTwitterScraper()
+                enhanced_scraper = EnhancedTwitterApiScraper()
                 await enhanced_scraper.scrape(config)
 
                 # Get enhanced content
                 enhanced_content = enhanced_scraper.get_enhanced_content()
+
+                bt.logging.info(f"Handle on demand response:{enhanced_content}")
 
                 # Convert EnhancedXContent to DataEntity to maintain protocol compatibility
                 enhanced_data_entities = []
@@ -808,6 +830,24 @@ class Miner:
             f"Prioritizing {synapse.dendrite.hotkey} with value: {priority}.",
         )
         return priority
+
+    def _deduplication_cleanup_loop(self):
+        """Background thread that performs periodic deduplication cleanup."""
+        bt.logging.info("Starting deduplication cleanup loop")
+        
+        while not self.should_exit:
+            try:
+                # Perform periodic deduplication cleanup
+                self.storage.perform_periodic_deduplication_cleanup()
+                
+                # Sleep for 30 minutes before next cleanup
+                time.sleep(15 * 60)  # 30 minutes in seconds
+                
+            except Exception as e:
+                bt.logging.error(f"Error in deduplication cleanup loop: {e}")
+                bt.logging.debug(traceback.format_exc())
+                # Sleep for 5 minutes before retrying on error
+                time.sleep(5 * 60)
 
     def get_config_for_test(self) -> bt.config:
         return self.config

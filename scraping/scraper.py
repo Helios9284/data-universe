@@ -17,6 +17,7 @@ class ScraperId(str, Enum):
     X_MICROWORLDS = "X.microworlds"
     X_APIDOJO = "X.apidojo"
     X_QUACKER = "X.quacker"
+    X_TWITTER_API = "x.twitter_api"
     YOUTUBE_CUSTOM_TRANSCRIPT = "YouTube.custom.transcript"
     YOUTUBE_APIFY_TRANSCRIPT = "YouTube.apify.transcript"
 

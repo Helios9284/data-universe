@@ -5,7 +5,7 @@ from scraping.reddit import model
 from scraping.scraper import ScrapeConfig, Scraper, ValidationResult, HFValidationResult
 import bittensor as bt
 from common.data import DataEntity, DataLabel, DataSource
-from typing import List
+from typing import List, Dict, Optional
 import asyncpraw
 from scraping.reddit.utils import (
     is_valid_reddit_url,
@@ -21,29 +21,231 @@ import datetime as dt
 import asyncio
 import random
 import os
-
+import json
+from dataclasses import dataclass
 from dotenv import load_dotenv
 
 load_dotenv()
 
 
+@dataclass
+class RedditCredential:
+    """Represents a single Reddit API credential set."""
+    client_id: str
+    client_secret: str
+    username: str
+    password: str
+    user_agent: str
+    last_used: float = 0.0
+    request_count: int = 0
+    is_active: bool = True
+
+
+class RedditCredentialManager:
+    """Manages multiple Reddit API credentials for load balancing and rate limit avoidance."""
+    
+    def __init__(self, worker_id: str = "default"):
+        self.credentials: List[RedditCredential] = []
+        self.current_index = 0
+        self.rate_limit_window = 60  # 60 seconds window
+        self.max_requests_per_window = 50  # Conservative limit per credential
+        self.worker_id = worker_id
+        self._load_credentials()
+    
+    def _load_credentials(self):
+        """Load Reddit credentials from environment variables."""
+        # Load primary credentials
+        primary_cred = RedditCredential(
+            client_id=os.getenv("REDDIT_CLIENT_ID", ""),
+            client_secret=os.getenv("REDDIT_CLIENT_SECRET", ""),
+            username=os.getenv("REDDIT_USERNAME", ""),
+            password=os.getenv("REDDIT_PASSWORD", ""),
+            user_agent=f"User-Agent: python: {os.getenv('REDDIT_USERNAME', '')}"
+        )
+        
+        if primary_cred.client_id and primary_cred.client_secret:
+            self.credentials.append(primary_cred)
+        
+        # Load secondary credentials (REDDIT_CLIENT_ID_2, REDDIT_CLIENT_SECRET_2, etc.)
+        for i in range(2, 6):  # Support up to 5 credential sets
+            client_id = os.getenv(f"REDDIT_CLIENT_ID_{i}")
+            client_secret = os.getenv(f"REDDIT_CLIENT_SECRET_{i}")
+            username = os.getenv(f"REDDIT_USERNAME_{i}")
+            password = os.getenv(f"REDDIT_PASSWORD_{i}")
+            
+            if client_id and client_secret and username and password:
+                cred = RedditCredential(
+                    client_id=client_id,
+                    client_secret=client_secret,
+                    username=username,
+                    password=password,
+                    user_agent=f"User-Agent: python: {username}"
+                )
+                self.credentials.append(cred)
+        
+        bt.logging.info(f"Worker {self.worker_id}: Loaded {len(self.credentials)} Reddit API credentials")
+        
+        if not self.credentials:
+            bt.logging.warning(f"Worker {self.worker_id}: No Reddit credentials found! Please set REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET, etc.")
+        else:
+            bt.logging.info(f"Worker {self.worker_id}: Available credentials: {[cred.username for cred in self.credentials]}")
+            # Test each credential to ensure they're valid
+            for i, cred in enumerate(self.credentials):
+                bt.logging.info(f"Worker {self.worker_id}: Credential {i+1}: {cred.username} (client_id: {cred.client_id[:8]}...)")
+    
+    def get_available_credential(self) -> Optional[RedditCredential]:
+        """Get an available credential that hasn't exceeded rate limits."""
+        current_time = time.time()
+        
+        # Clean up old request counts
+        for cred in self.credentials:
+            if current_time - cred.last_used > self.rate_limit_window:
+                cred.request_count = 0
+        
+        # Find available credentials
+        available_creds = [
+            cred for cred in self.credentials 
+            if cred.is_active and cred.request_count < self.max_requests_per_window
+        ]
+        
+        if not available_creds:
+            bt.logging.warning(f"Worker {self.worker_id}: All Reddit credentials are rate limited, waiting for reset...")
+            return None
+        
+        # Use worker-specific selection strategy to distribute load
+        # Ensure both workers get credentials even with limited availability
+        if len(available_creds) == 1:
+            # If only one credential, both workers share it
+            worker_creds = available_creds
+            bt.logging.info(f"Worker {self.worker_id}: Sharing single credential {available_creds[0].username}")
+        elif len(available_creds) == 2:
+            # If two credentials, assign one to each worker
+            if self.worker_id == "REDDIT_API_1":
+                worker_creds = [available_creds[0]]
+            elif self.worker_id == "REDDIT_API_2":
+                worker_creds = [available_creds[1]]
+            else:
+                worker_creds = available_creds
+            bt.logging.info(f"Worker {self.worker_id}: Using dedicated credential {worker_creds[0].username}")
+        elif len(available_creds) >= 3:
+            # If 3+ credentials, use half-and-half distribution
+            mid_point = len(available_creds) // 2
+            if self.worker_id == "REDDIT_API_1":
+                worker_creds = available_creds[:mid_point]
+            elif self.worker_id == "REDDIT_API_2":
+                worker_creds = available_creds[mid_point:]
+            else:
+                worker_creds = available_creds
+            bt.logging.info(f"Worker {self.worker_id}: Using {len(worker_creds)} credentials from pool of {len(available_creds)}")
+        else:
+            # Fallback: use all available credentials
+            worker_creds = available_creds
+            bt.logging.warning(f"Worker {self.worker_id}: No dedicated credentials available, falling back to all credentials")
+        
+        # If this worker has no credentials, try to get any available credential
+        if not worker_creds:
+            bt.logging.warning(f"Worker {self.worker_id}: No dedicated credentials available, trying to use any available credential")
+            worker_creds = available_creds
+        
+        if not worker_creds:
+            bt.logging.error(f"Worker {self.worker_id}: No available credentials for this worker")
+            return None
+        
+        # Round-robin selection among worker-specific credentials
+        selected_cred = worker_creds[self.current_index % len(worker_creds)]
+        self.current_index += 1
+        
+        # Update usage
+        selected_cred.last_used = current_time
+        selected_cred.request_count += 1
+        
+        bt.logging.info(f"Worker {self.worker_id}: Selected credential: {selected_cred.username} (client_id: {selected_cred.client_id[:8]}...)")
+        return selected_cred
+    
+    def mark_credential_failed(self, credential: RedditCredential):
+        """Mark a credential as failed (temporarily disable it)."""
+        credential.is_active = False
+        bt.logging.warning(f"Worker {self.worker_id}: Marked credential for {credential.username} as failed")
+        
+        # Re-enable after 5 minutes
+        asyncio.create_task(self._reenable_credential(credential, 300))
+    
+    async def _reenable_credential(self, credential: RedditCredential, delay_seconds: int):
+        """Re-enable a credential after a delay."""
+        await asyncio.sleep(delay_seconds)
+        credential.is_active = True
+        credential.request_count = 0
+        bt.logging.info(f"Worker {self.worker_id}: Re-enabled credential for {credential.username}")
+
+
 class RedditCustomScraper(Scraper):
     """
-    Scrapes Reddit data using a personal reddit account.
+    Scrapes Reddit data using multiple personal reddit accounts for load balancing.
     """
 
-    USER_AGENT = f"User-Agent: python: {os.getenv('REDDIT_USERNAME')}"
+    def __init__(self, worker_id: str = "default"):
+        self.credential_manager = RedditCredentialManager(worker_id=worker_id)
+        self.worker_id = worker_id
+        self._current_credential = None
+        bt.logging.info(f"RedditCustomScraper initialized with credential manager for worker {worker_id}")
+
+    async def _get_reddit_client(self) -> Optional[asyncpraw.Reddit]:
+        """Get a Reddit client using an available credential with retry logic."""
+        max_retries = 3
+        retry_delay = 1  # Start with 1 second delay
+        
+        for attempt in range(max_retries):
+            credential = self.credential_manager.get_available_credential()
+            
+            if not credential:
+                if attempt < max_retries - 1:
+                    bt.logging.warning(f"Worker {self.worker_id}: No credentials available, retrying in {retry_delay}s (attempt {attempt + 1}/{max_retries})")
+                    await asyncio.sleep(retry_delay)
+                    retry_delay *= 2  # Exponential backoff
+                    continue
+                else:
+                    bt.logging.error(f"Worker {self.worker_id}: No credentials available after {max_retries} attempts")
+                    return None
+            
+            # Track the current credential for error handling
+            self._current_credential = credential
+            
+            try:
+                reddit = asyncpraw.Reddit(
+                    client_id=credential.client_id,
+                    client_secret=credential.client_secret,
+                    username=credential.username,
+                    password=credential.password,
+                    user_agent=credential.user_agent,
+                )
+                return reddit
+            except Exception as e:
+                bt.logging.error(f"Worker {self.worker_id}: Failed to create Reddit client for {credential.username}: {e}")
+                self.credential_manager.mark_credential_failed(credential)
+                
+                if attempt < max_retries - 1:
+                    bt.logging.warning(f"Worker {self.worker_id}: Retrying with different credential in {retry_delay}s (attempt {attempt + 1}/{max_retries})")
+                    await asyncio.sleep(retry_delay)
+                    retry_delay *= 2  # Exponential backoff
+                    continue
+                else:
+                    bt.logging.error(f"Worker {self.worker_id}: Failed to create Reddit client after {max_retries} attempts")
+                    return None
 
     async def validate(self, entities: List[DataEntity]) -> List[ValidationResult]:
-        """Validate the correctness of a DataEntity by URI."""
+        """
+        Validate a list of DataEntity objects.
+
+        * Fails automatically if a submission is NSFW (over_18=True).
+        * For comments, it checks the parent submission (and subreddit) NSFW flag.
+        """
         if not entities:
             return []
 
-        results = []
+        results: List[ValidationResult] = []
 
-        # For verification, it's easiest to perform each query separately.
         for entity in entities:
-            # First check the URI is a valid Reddit URL.
+            # 1) Basic URI sanity check
             if not is_valid_reddit_url(entity.uri):
                 results.append(
                     ValidationResult(
@@ -54,14 +256,10 @@ class RedditCustomScraper(Scraper):
                 )
                 continue
 
-            # Parse out the RedditContent object that we're validating
-            reddit_content_to_verify = None
+            # 2) Decode RedditContent blob
             try:
-                reddit_content_to_verify = RedditContent.from_data_entity(entity)
+                ent_content = RedditContent.from_data_entity(entity)
             except Exception:
-                bt.logging.error(
-                    f"Failed to decode RedditContent from data entity bytes: {traceback.format_exc()}."
-                )
                 results.append(
                     ValidationResult(
                         is_valid=False,
@@ -71,58 +269,89 @@ class RedditCustomScraper(Scraper):
                 )
                 continue
 
-            # Retrieve the Reddit Post/Comment from PRAW.
-            content = None
-
+            # 3) Fetch live data from Reddit
             try:
-                async with asyncpraw.Reddit(
-                    client_id=os.getenv("REDDIT_CLIENT_ID"),
-                    client_secret=os.getenv("REDDIT_CLIENT_SECRET"),
-                    username=os.getenv("REDDIT_USERNAME"),
-                    password=os.getenv("REDDIT_PASSWORD"),
-                    user_agent=RedditCustomScraper.USER_AGENT,
-                ) as reddit:
-                    if reddit_content_to_verify.data_type == RedditDataType.POST:
-                        submission = await reddit.submission(
-                            url=reddit_content_to_verify.url
+                reddit = await self._get_reddit_client()
+                if not reddit:
+                    results.append(
+                        ValidationResult(
+                            is_valid=False,
+                            reason="No available Reddit credentials.",
+                            content_size_bytes_validated=entity.content_size_bytes,
                         )
-                        # Parse the response.
-                        content = self._best_effort_parse_submission(submission)
+                    )
+                    continue
+
+                async with reddit:
+                    # ---- A) POST branch ----
+                    if ent_content.data_type == RedditDataType.POST:
+                        submission = await reddit.submission(url=ent_content.url)
+                        await submission.load()                       # ensure attrs
+
+                        # Check NSFW only after the filter date
+                        if (dt.datetime.now(tz=dt.timezone.utc) >= constants.NSFW_REDDIT_FILTER_DATE and 
+                            submission.over_18):                        # NSFW post
+                            results.append(
+                                ValidationResult(
+                                    is_valid=False,
+                                    reason="Submission is NSFW (over_18).",
+                                    content_size_bytes_validated=entity.content_size_bytes,
+                                )
+                            )
+                            continue
+
+                        live_content = self._best_effort_parse_submission(submission)
+
+                    # ---- B) COMMENT branch ----
                     else:
-                        comment = await reddit.comment(url=reddit_content_to_verify.url)
-                        # Parse the response.
-                        content = self._best_effort_parse_comment(comment)
+                        comment = await reddit.comment(url=ent_content.url)
+                        await comment.load()
+
+                        parent = comment.submission
+                        await parent.load()                           # full parent
+                        subreddit = comment.subreddit
+                        await subreddit.load()                        # full subreddit
+
+                        # Check NSFW only after the filter date
+                        if (dt.datetime.now(tz=dt.timezone.utc) >= constants.NSFW_REDDIT_FILTER_DATE and 
+                            (parent.over_18 or subreddit.over18)):
+                            results.append(
+                                ValidationResult(
+                                    is_valid=False,
+                                    reason="Parent submission or subreddit is NSFW (over_18).",
+                                    content_size_bytes_validated=entity.content_size_bytes,
+                                )
+                            )
+                            continue
+
+                        live_content = self._best_effort_parse_comment(comment)
+
             except Exception as e:
-                bt.logging.error(
-                    f"Failed to validate entity ({entity.uri})[{entity.content}]: {traceback.format_exc()}."
-                )
-                # This is an unfortunate situation. We have no way to distinguish a genuine failure from
-                # one caused by malicious input. In my own testing I was able to make the request timeout by
-                # using a bad URI. As such, we have to penalize the miner here. If we didn't they could
-                # pass malicious input for chunks they don't have.
+                bt.logging.error(f"Failed to retrieve content for {entity.uri}: {e}")
                 results.append(
                     ValidationResult(
                         is_valid=False,
-                        reason="Failed to retrieve submission. This can happen if the URI is invalid, or Reddit is having an issue.",
+                        reason="Failed to retrieve submission/comment from Reddit.",
                         content_size_bytes_validated=entity.content_size_bytes,
                     )
                 )
                 continue
 
-            if not content:
+            # 4) Live content object exists?
+            if not live_content:
                 results.append(
                     ValidationResult(
                         is_valid=False,
-                        reason="Reddit post/comment not found or is invalid.",
+                        reason="Reddit content not found or invalid.",
                         content_size_bytes_validated=entity.content_size_bytes,
                     )
                 )
                 continue
 
-            # We found the Reddit content. Validate it.
+            # 5) Field-by-field validation
             results.append(
                 validate_reddit_content(
-                    actual_content=content,
+                    actual_content=live_content,
                     entity_to_validate=entity,
                 )
             )
@@ -132,7 +361,7 @@ class RedditCustomScraper(Scraper):
     async def validate_hf(self, entities) -> HFValidationResult:
         """Validate the correctness of HFEntities by URL, focusing on username, date (hour), and text."""
         if not entities:
-            return True
+            return HFValidationResult(is_valid=True, validation_percentage=100.0, reason="No entities to validate")
 
         validation_results = []
 
@@ -143,13 +372,12 @@ class RedditCustomScraper(Scraper):
 
             content = None
             try:
-                async with asyncpraw.Reddit(
-                        client_id=os.getenv("REDDIT_CLIENT_ID"),
-                        client_secret=os.getenv("REDDIT_CLIENT_SECRET"),
-                        username=os.getenv("REDDIT_USERNAME"),
-                        password=os.getenv("REDDIT_PASSWORD"),
-                        user_agent=RedditCustomScraper.USER_AGENT,
-                ) as reddit:
+                reddit = await self._get_reddit_client()
+                if not reddit:
+                    validation_results.append(False)
+                    continue
+
+                async with reddit:
                     if entity.get('dataType') == RedditDataType.COMMENT:
                         comment = await reddit.comment(url=entity.get('url'))
                         content = self._best_effort_parse_comment(comment)
@@ -180,7 +408,10 @@ class RedditCustomScraper(Scraper):
         """Validate the Reddit content against the entity to validate, focusing on username, date (hour), and text."""
 
         # Compare date (year, month, day)
-        entity_datetime = dt.datetime.fromisoformat(entity_to_validate.get('datetime'))
+        entity_datetime_str = entity_to_validate.get('datetime')
+        if not entity_datetime_str:
+            return False
+        entity_datetime = dt.datetime.fromisoformat(entity_datetime_str)
         actual_datetime = actual_content.created_at
 
         if isinstance(actual_datetime, str):
@@ -221,7 +452,7 @@ class RedditCustomScraper(Scraper):
         )
 
         bt.logging.trace(
-             f"Running custom Reddit scraper with search: {subreddit_name}."
+             f"Worker {self.worker_id}: Running custom Reddit scraper with search: {subreddit_name}."
         )
 
         # Randomize between fetching submissions and comments to reduce api calls.
@@ -235,13 +466,12 @@ class RedditCustomScraper(Scraper):
         # In either case we parse the response into a list of RedditContents.
         contents = None
         try:
-            async with asyncpraw.Reddit(
-                client_id=os.getenv("REDDIT_CLIENT_ID"),
-                client_secret=os.getenv("REDDIT_CLIENT_SECRET"),
-                username=os.getenv("REDDIT_USERNAME"),
-                password=os.getenv("REDDIT_PASSWORD"),
-                user_agent=RedditCustomScraper.USER_AGENT,
-            ) as reddit:
+            reddit = await self._get_reddit_client()
+            if not reddit:
+                bt.logging.error(f"Worker {self.worker_id}: No available Reddit credentials for scraping")
+                return []
+
+            async with reddit:
                 subreddit = await reddit.subreddit(subreddit_name)
 
                 if fetch_submissions:
@@ -267,18 +497,29 @@ class RedditCustomScraper(Scraper):
                         self._best_effort_parse_comment(comment)
                         async for comment in comments
                     ]
-        except Exception:
-            bt.logging.error(
-                f"Failed to scrape reddit using subreddit {subreddit_name}, limit {search_limit}, time {search_time}, sort {search_sort}: {traceback.format_exc()}."
-            )
+        except Exception as e:
+            # Check if it's a 403 error (authentication/authorization issue)
+            if "403" in str(e) or "Forbidden" in str(e):
+                bt.logging.error(
+                    f"Worker {self.worker_id}: Authentication failed for subreddit {subreddit_name}. "
+                    f"This may indicate invalid credentials or account suspension. Error: {e}"
+                )
+                # Mark the current credential as failed
+                if hasattr(self, '_current_credential') and self._current_credential:
+                    self.credential_manager.mark_credential_failed(self._current_credential)
+            else:
+                bt.logging.error(
+                    f"Worker {self.worker_id}: Failed to scrape reddit using subreddit {subreddit_name}, limit {search_limit}, time {search_time}, sort {search_sort}: {str(e)}"
+                )
+                bt.logging.error(f"Worker {self.worker_id}: Full traceback: {traceback.format_exc()}")
             # TODO: Raise a specific exception, in case the scheduler wants to have some logic for retries.
             return []
 
         # Return the parsed results, ignoring data that can't be parsed.
-        parsed_contents = [content for content in contents if content != None]
+        parsed_contents = [content for content in contents if content is not None]
 
         bt.logging.success(
-            f"Completed scrape for subreddit {subreddit_name}. Scraped {len(parsed_contents)} items."
+            f"Worker {self.worker_id}: Completed scrape for subreddit {subreddit_name}. Scraped {len(parsed_contents)} items."
         )
 
         data_entities = []
@@ -296,6 +537,11 @@ class RedditCustomScraper(Scraper):
         content = None
 
         try:
+            # Skip NSFW content
+            if getattr(submission, 'over_18', False):
+                bt.logging.trace(f"Skipping NSFW submission: {submission.permalink}")
+                return None
+                
             user = submission.author.name if submission.author else model.DELETED_USER
             content = RedditContent(
                 id=submission.name,
@@ -329,6 +575,12 @@ class RedditCustomScraper(Scraper):
         content = None
 
         try:
+            # Skip comments from NSFW submissions or subreddits
+            if (getattr(comment.submission, 'over_18', False) or 
+                getattr(comment.subreddit, 'over18', False)):
+                bt.logging.trace(f"Skipping comment from NSFW submission/subreddit: {comment.permalink}")
+                return None
+                
             user = comment.author.name if comment.author else model.DELETED_USER
             content = RedditContent(
                 id=comment.name,

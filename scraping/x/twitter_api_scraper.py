@@ -7,33 +7,33 @@ from common import constants
 from common.data import DataEntity, DataLabel, DataSource
 from common.date_range import DateRange
 from scraping.scraper import ScrapeConfig, Scraper, ValidationResult, HFValidationResult
-from scraping.apify import ActorRunner, RunConfig
 from scraping.x.model import XContent
 from scraping.x import utils
 import datetime as dt
-
+try:
+    import tweepy
+except ImportError:
+    bt.logging.warning("tweepy not installed. Twitter API scraper will not work.")
+    tweepy = None
 
 class ApiDojoTwitterScraper(Scraper):
     """
     Scrapes tweets using the Apidojo Twitter Scraper: https://console.apify.com/actors/61RPP7dywgiy0JPD0.
     """
 
-    ACTOR_ID = "61RPP7dywgiy0JPD0"
 
     SCRAPE_TIMEOUT_SECS = 120
 
-    BASE_RUN_INPUT = {
-        "maxRequestRetries": 5
-    }
-
-    # As of 2/5/24 this actor only takes 256 MB in the default config so we can run a full batch without hitting shared actor memory limits.
-    concurrent_validates_semaphore = threading.BoundedSemaphore(20)
-
-    def __init__(self, runner: ActorRunner = ActorRunner()):
-        self.runner = runner
+    def __init__(self, bearer_token=None):
+        # Use the provided bearer_token or get from environment/config
+        if bearer_token is None:
+            import os
+            bearer_token = os.environ.get("TWITTER_BEARER_TOKEN")
+            bt.logging.info(f"Bearer token: {bearer_token}")
+        self.client = tweepy.Client(bearer_token=bearer_token)
 
     async def validate(self, entities: List[DataEntity]) -> List[ValidationResult]:
-        """Validate the correctness of a DataEntity by URI."""
+        """Validate the correctness of a DataEntity by URI using Twitter API."""
 
         async def validate_entity(entity) -> ValidationResult:
             if not utils.is_valid_twitter_url(entity.uri):
@@ -42,91 +42,52 @@ class ApiDojoTwitterScraper(Scraper):
                     reason="Invalid URI.",
                     content_size_bytes_validated=entity.content_size_bytes,
                 )
-            attempt = 0
-            max_attempts = 2
-
-            while attempt < max_attempts:
-                # Increment attempt.
-                attempt += 1
-
-                # On attempt 1 we fetch the exact number of tweets. On retry we fetch more in case they are in replies.
-                tweet_count = 1 if attempt == 1 else 5
-
-                run_input = {
-                    **ApiDojoTwitterScraper.BASE_RUN_INPUT,
-                    "startUrls": [entity.uri],
-                    "maxItems": tweet_count,
-                }
-                run_config = RunConfig(
-                    actor_id=ApiDojoTwitterScraper.ACTOR_ID,
-                    debug_info=f"Validate {entity.uri}",
-                    max_data_entities=tweet_count,
-                )
-
-                # Retrieve the tweets from Apify.
-                dataset: List[dict] = None
-                try:
-                    dataset: List[dict] = await self.runner.run(run_config, run_input)
-                except (
-                        Exception
-                ) as e:  # Catch all exceptions here to ensure we do not exit validation early.
-                    if attempt != max_attempts:
-                        # Retrying.
-                        continue
-                    else:
-                        bt.logging.error(
-                            f"Failed to run actor: {traceback.format_exc()}."
-                        )
-                        # This is an unfortunate situation. We have no way to distinguish a genuine failure from
-                        # one caused by malicious input. In my own testing I was able to make the Actor timeout by
-                        # using a bad URI. As such, we have to penalize the miner here. If we didn't they could
-                        # pass malicious input for chunks they don't have.
-                        return ValidationResult(
-                            is_valid=False,
-                            reason="Failed to run Actor. This can happen if the URI is invalid, or APIfy is having an issue.",
-                            content_size_bytes_validated=entity.content_size_bytes,
-                        )
-
-                # Parse the response
-                tweets, is_retweets = self._best_effort_parse_dataset(dataset)
-
-                actual_tweet = None
-
-                for index, tweet in enumerate(tweets):
-                    if utils.normalize_url(tweet.url) == utils.normalize_url(entity.uri):
-                        actual_tweet = tweet
-                        is_retweet = is_retweets[index]
-                        break
-
-                bt.logging.debug(actual_tweet)
-                if actual_tweet is None:
-                    # Only append a failed result if on final attempt.
-                    if attempt == max_attempts:
-                        return ValidationResult(
-                            is_valid=False,
-                            reason="Tweet not found or is invalid.",
-                            content_size_bytes_validated=entity.content_size_bytes,
-                        )
-                else:
-                    return utils.validate_tweet_content(
-                        actual_tweet=actual_tweet,
-                        entity=entity,
-                        is_retweet=is_retweet
+            
+            try:
+                # Extract tweet ID from URL
+                tweet_id = utils.extract_tweet_id_from_url(entity.uri)
+                if not tweet_id:
+                    return ValidationResult(
+                        is_valid=False,
+                        reason="Could not extract tweet ID from URL.",
+                        content_size_bytes_validated=entity.content_size_bytes,
                     )
+                
+                # Fetch tweet using Twitter API
+                response = self.client.get_tweet(
+                    tweet_id,
+                    tweet_fields=["created_at", "author_id", "text", "id", "entities"]
+                )
+                
+                if not response.data:
+                    return ValidationResult(
+                        is_valid=False,
+                        reason="Tweet not found via Twitter API.",
+                        content_size_bytes_validated=entity.content_size_bytes,
+                    )
+                
+                # Convert to XContent and validate
+                x_content = self._xcontent_from_tweepy_tweet(response.data)
+                return utils.validate_tweet_content(
+                    actual_tweet=x_content,
+                    entity=entity,
+                    is_retweet=False  # We'll need to check this from the API response
+                )
+                
+            except Exception as e:
+                bt.logging.error(f"Failed to validate tweet {entity.uri}: {e}")
+                return ValidationResult(
+                    is_valid=False,
+                    reason=f"Twitter API validation failed: {str(e)}",
+                    content_size_bytes_validated=entity.content_size_bytes,
+                )
 
         if not entities:
             return []
 
-        # Since we are using the threading.semaphore we need to use it in a context outside of asyncio.
-        bt.logging.trace("Acquiring semaphore for concurrent apidojo validations.")
-
-        with ApiDojoTwitterScraper.concurrent_validates_semaphore:
-            bt.logging.trace(
-                "Acquired semaphore for concurrent apidojo validations."
-            )
-            results = await asyncio.gather(
-                *[validate_entity(entity) for entity in entities]
-            )
+        results = await asyncio.gather(
+            *[validate_entity(entity) for entity in entities]
+        )
 
         return results
 
@@ -226,16 +187,7 @@ class ApiDojoTwitterScraper(Scraper):
                                   reason=f"Validation Percentage = {valid_percent}")
 
     async def scrape(self, scrape_config: ScrapeConfig) -> List[DataEntity]:
-        """Scrapes a batch of Tweets according to the scrape config."""
-        # Construct the query string.
-        date_format = "%Y-%m-%d_%H:%M:%S_UTC"
-
         query_parts = []
-
-        # Add date range
-        query_parts.append(
-            f"since:{scrape_config.date_range.start.astimezone(tz=dt.timezone.utc).strftime(date_format)}")
-        query_parts.append(f"until:{scrape_config.date_range.end.astimezone(tz=dt.timezone.utc).strftime(date_format)}")
 
         # Handle labels - separate usernames and keywords
         if scrape_config.labels:
@@ -244,221 +196,305 @@ class ApiDojoTwitterScraper(Scraper):
 
             for label in scrape_config.labels:
                 if label.value.startswith('@'):
-                    # Remove @ for the API query
                     username = label.value[1:]
                     username_labels.append(f"from:{username}")
                 else:
                     keyword_labels.append(label.value)
 
-            # Add usernames with OR between them
+            # Deduplicate labels to prevent rule length issues
+            username_labels = list(set(username_labels))
+            keyword_labels = list(set(keyword_labels))
+            
+            # Limit the number of labels to prevent query length issues
+            MAX_LABELS_PER_TYPE = 10  # Reasonable limit to stay under 512 chars
+            if len(username_labels) > MAX_LABELS_PER_TYPE:
+                bt.logging.warning(f"Too many username labels ({len(username_labels)}), limiting to {MAX_LABELS_PER_TYPE}")
+                username_labels = username_labels[:MAX_LABELS_PER_TYPE]
+            
+            if len(keyword_labels) > MAX_LABELS_PER_TYPE:
+                bt.logging.warning(f"Too many keyword labels ({len(keyword_labels)}), limiting to {MAX_LABELS_PER_TYPE}")
+                keyword_labels = keyword_labels[:MAX_LABELS_PER_TYPE]
+
             if username_labels:
                 query_parts.append(f"({' OR '.join(username_labels)})")
-
-            # Add keywords with OR between them if there are any
             if keyword_labels:
                 query_parts.append(f"({' OR '.join(keyword_labels)})")
         else:
-            # HACK: The search query doesn't work if only a time range is provided.
-            # If no label is specified, just search for "e", the most common letter in the English alphabet.
             query_parts.append("e")
-
-        # Join all parts with spaces
+        
         query = " ".join(query_parts)
+        
+        # Validate query length and truncate if necessary
+        query = self._validate_and_truncate_query(query)
+        max_results = min(scrape_config.entity_limit or 100, 100)  # Twitter API max is 100 per request
 
-        # Construct the input to the runner.
-        max_items = scrape_config.entity_limit or 150
-        run_input = {
-            **ApiDojoTwitterScraper.BASE_RUN_INPUT,
-            "searchTerms": [query],
-            "maxTweets": max_items,
-        }
-
-        run_config = RunConfig(
-            actor_id=ApiDojoTwitterScraper.ACTOR_ID,
-            debug_info=f"Scrape {query}",
-            max_data_entities=scrape_config.entity_limit,
-            timeout_secs=ApiDojoTwitterScraper.SCRAPE_TIMEOUT_SECS,
-        )
-
-        bt.logging.success(f"Performing Twitter scrape for search terms: {query}.")
-
-        # Run the Actor and retrieve the scraped data.
-        dataset: List[dict] = None
-        try:
-            dataset: List[dict] = await self.runner.run(run_config, run_input)
-        except Exception:
-            bt.logging.error(
-                f"Failed to scrape tweets using search terms {query}: {traceback.format_exc()}."
+        # Clamp start_time and end_time to Twitter API's allowed window (last 7 days)
+        now = dt.datetime.now(dt.timezone.utc)
+        max_lookback = dt.timedelta(days=7)
+        min_start_time = now - max_lookback
+        orig_start = scrape_config.date_range.start
+        orig_end = scrape_config.date_range.end
+        clamped_start = max(orig_start, min_start_time)
+        bt.logging.info(f"Clamped start: {clamped_start}")
+        clamped_end = min(orig_end, now)
+        bt.logging.info(f"Clamped end: {clamped_end}")
+        if clamped_start != orig_start or clamped_end != orig_end:
+            bt.logging.warning(f"Clamping Twitter API date range: requested start={orig_start}, end={orig_end}; clamped to start={clamped_start}, end={clamped_end}")
+        if clamped_start >= clamped_end:
+            bt.logging.warning(
+                f"Twitter API date range invalid after clamping: start={clamped_start}, end={clamped_end}. Skipping request."
             )
             return []
+        start_time = clamped_start.isoformat()
+        end_time = clamped_end.isoformat()
 
-        # Return the parsed results, ignoring data that can't be parsed.
-        x_contents, is_retweets = self._best_effort_parse_dataset(dataset)
+        bt.logging.success(f"Performing Twitter scrape for search terms: {query}.")
+        tweets = []
+        try:
+            response = self.client.search_recent_tweets(
+                query=query,
+                start_time=start_time,
+                end_time=end_time,
+                max_results=max_results,
+                tweet_fields=["created_at", "author_id", "text", "id", "entities"]
+            )
+            bt.logging.info(f"Twitter Response: {response}")
+            tweets = response.data if response.data else []
+        except Exception as e:
+            bt.logging.error(f"Error fetching tweets: {e}")
+            return []
 
-        bt.logging.success(
-            f"Completed scrape for {query}. Scraped {len(x_contents)} items."
-        )
-
+        # Get the primary label from scrape_config
+        primary_label = scrape_config.labels[0] if scrape_config.labels else None
+        
+        # Process tweets and create DataEntity objects with proper labels
         data_entities = []
-        for x_content in x_contents:
-            data_entities.append(XContent.to_data_entity(content=x_content))
-        bt.logging.success(f"SUCCESS twitter scraping: {data_entities}.")
-
+        for tweet in tweets:
+            try:
+                # Create XContent from tweet
+                x_content = self._xcontent_from_tweepy_tweet(tweet)
+                
+                # Modify hashtags to set the primary label first
+                if primary_label is not None:
+                    # Use the primary label from config as the first hashtag
+                    x_content.tweet_hashtags = [primary_label.value] + x_content.tweet_hashtags
+                elif not x_content.tweet_hashtags:
+                    # If no hashtags and no config label, add a default
+                    x_content.tweet_hashtags = ["#general"]
+                
+                # Create DataEntity - XContent.to_data_entity will use the first hashtag as label
+                data_entity = XContent.to_data_entity(x_content)
+                data_entities.append(data_entity)
+            except Exception as e:
+                bt.logging.warning(f"Failed to process tweet: {e}")
+                continue
+            
+        bt.logging.info(f"Data entities: {data_entities}")
+        bt.logging.success(
+            f"Completed scrape for {query}. Scraped {len(data_entities)} items."
+        )
         return data_entities
 
-    def _best_effort_parse_dataset(self, dataset: List[dict]) -> Tuple[List[XContent], List[bool]]:
-        """Performs a best effort parsing of Apify dataset into List[XContent]
-        Any errors are logged and ignored."""
+    def _best_effort_parse_dataset(self, tweets) -> List[DataEntity]:
+        """Converts a list of Tweepy tweet objects into DataEntity objects."""
+        if not tweets:
+            return []
+        results: List[DataEntity] = []
+        for tweet in tweets:
+            try:
+                x_content = self._xcontent_from_tweepy_tweet(tweet)
+                data_entity = XContent.to_data_entity(x_content)
+                bt.logging.info(f"Data entity: {data_entity}")
+                results.append(data_entity)
+                bt.logging.info(f"Results: {results}")
+            except Exception as e:
+                bt.logging.warning(f"Failed to parse tweet to XContent/DataEntity: {e}")
+        return results                
+    def _xcontent_from_tweepy_tweet(self, tweet, includes=None):
+        """
+        Helper to convert a Tweepy tweet object to XContent with all available metadata.
+        Optionally uses the includes dict for user/media expansion.
+        """
+        # Extract hashtags
+        hashtags = []
+        if hasattr(tweet, 'entities') and tweet.entities and 'hashtags' in tweet.entities:
+            hashtags = [f"#{tag['tag']}" if isinstance(tag, dict) and 'tag' in tag else f"#{tag['text']}" for tag in tweet.entities['hashtags']]
+        print("[DEBUG] Extracted hashtags:", hashtags)
 
-        if dataset == [{"zero_result": True}] or not dataset:
-            return [], []
+        # Extract media URLs (if available)
+        media_urls = []
+        if includes and hasattr(tweet, 'attachments') and tweet.attachments and 'media_keys' in tweet.attachments:
+            media_keys = tweet.attachments['media_keys']
+            media_dict = {m['media_key']: m for m in includes.get('media', [])}
+            for key in media_keys:
+                media = media_dict.get(key)
+                if media and 'url' in media:
+                    media_urls.append(media['url'])
 
-        results: List[XContent] = []
-        is_retweets: List[bool] = []
-        
+        # Extract user info (requires expansions='author_id' and user_fields)
+        user_id = getattr(tweet, 'author_id', None)
+        user_display_name = None
+        user_verified = None
+        username = user_id
+        if includes and 'users' in includes and user_id:
+            user_obj = next((u for u in includes['users'] if u['id'] == str(user_id)), None)
+            if user_obj:
+                user_display_name = user_obj.get('name')
+                user_verified = user_obj.get('verified')
+                username = user_obj.get('username')
+
+        # Extract reply/quote/conversation info
+        is_reply = hasattr(tweet, 'in_reply_to_user_id') and tweet.in_reply_to_user_id is not None
+        is_quote = False
+        if hasattr(tweet, 'referenced_tweets') and tweet.referenced_tweets:
+            is_quote = any(ref.type == 'quoted' for ref in tweet.referenced_tweets)
+        conversation_id = getattr(tweet, 'conversation_id', None)
+        in_reply_to_user_id = getattr(tweet, 'in_reply_to_user_id', None)
+
+        return XContent(
+            username=username,
+            text=tweet.text,
+            url=f"https://twitter.com/i/web/status/{tweet.id}",
+            timestamp=tweet.created_at,
+            tweet_hashtags=hashtags,
+            media=media_urls if media_urls else None,
+            user_id=str(user_id) if user_id is not None else None,
+            user_display_name=user_display_name,
+            user_verified=user_verified,
+            tweet_id=str(tweet.id) if tweet.id is not None else None,
+            is_reply=is_reply,
+            is_quote=is_quote,
+            conversation_id=str(conversation_id) if conversation_id is not None else None,
+            in_reply_to_user_id=str(in_reply_to_user_id) if in_reply_to_user_id is not None else None,
+        )            
+
+    def _best_effort_parse_hf_dataset(self, dataset: List[dict]) -> List[DataEntity]:
+        """
+        Parses a HuggingFace dataset (list of dicts) into DataEntity objects using XContent.
+        Extracts all available metadata fields. Logs and skips any entries that cannot be parsed.
+        """
+        if not dataset or dataset == [{"zero_result": True}]:
+            return []
+        results: List[DataEntity] = []
         for data in dataset:
             try:
-                # Check that we have the required fields.
-                if not all(field in data for field in ["text", "url", "createdAt"]):
+                # Required fields
+                text = utils.sanitize_scraped_tweet(data.get('text', ''))
+                url = data.get('url')
+                created_at = data.get('createdAt') or data.get('timestamp')
+                if not (text and url and created_at):
                     continue
-
-                # Extract reply information (tuple of (user_id, username))
-                reply_info = self._extract_reply_info(data)
-                
-                # Extract user information
-                user_info = self._extract_user_info(data)
-                
-                # Extract hashtags and media
-                tags = self._extract_tags(data)
-                media_urls = self._extract_media_urls(data)
-
-                is_retweet = data.get('isRetweet', False)
-                is_retweets.append(is_retweet)
-                
-                results.append(
-                    XContent(
-                        username=data['author']['userName'],
-                        text=utils.sanitize_scraped_tweet(data['text']),
-                        url=data["url"],
-                        timestamp=dt.datetime.strptime(
-                            data["createdAt"], "%a %b %d %H:%M:%S %z %Y"
-                        ),
-                        tweet_hashtags=tags,
-                        media=media_urls if media_urls else None,
-                        # Enhanced fields
-                        user_id=user_info['id'],
-                        user_display_name=user_info['display_name'],
-                        user_verified=user_info['verified'],
-                        # Non-dynamic tweet metadata
-                        tweet_id=data.get('id'),
-                        is_reply=data.get('isReply', None),
-                        is_quote=data.get('isQuote', None),
-                        # Additional metadata
-                        conversation_id=data.get('conversationId'),
-                        in_reply_to_user_id=reply_info[0],
-                    )
+                # Parse datetime
+                try:
+                    if isinstance(created_at, str):
+                        # Try multiple formats
+                        try:
+                            timestamp = dt.datetime.strptime(created_at, "%a %b %d %H:%M:%S %z %Y")
+                        except Exception:
+                            timestamp = dt.datetime.fromisoformat(created_at)
+                    else:
+                        timestamp = created_at
+                except Exception as e:
+                    bt.logging.warning(f"Failed to parse datetime: {e}")
+                    continue
+                # Hashtags
+                hashtags = data.get('tweet_hashtags') or utils.extract_hashtags(text)
+                # Media
+                media_urls = []
+                if 'media' in data and isinstance(data['media'], list):
+                    for media_item in data['media']:
+                        if isinstance(media_item, dict) and 'media_url_https' in media_item:
+                            media_urls.append(media_item['media_url_https'])
+                        elif isinstance(media_item, dict) and 'url' in media_item:
+                            media_urls.append(media_item['url'])
+                        elif isinstance(media_item, str):
+                            media_urls.append(media_item)
+                # Other metadata
+                xcontent = XContent(
+                    username=data.get('username') or utils.extract_user(url),
+                    text=text,
+                    url=url,
+                    timestamp=timestamp,
+                    tweet_hashtags=hashtags,
+                    media=media_urls if media_urls else None,
+                    user_id=data.get('user_id'),
+                    user_display_name=data.get('user_display_name'),
+                    user_verified=data.get('user_verified'),
+                    tweet_id=str(data.get('tweet_id') or data.get('id') or ''),
+                    is_reply=data.get('is_reply'),
+                    is_quote=data.get('is_quote'),
+                    conversation_id=data.get('conversation_id'),
+                    in_reply_to_user_id=data.get('in_reply_to_user_id'),
                 )
-            except Exception:
-                bt.logging.warning(
-                    f"Failed to decode XContent from Apify response: {traceback.format_exc()}."
-                )
-        
-        return results, is_retweets
-
-    def _extract_reply_info(self, data: dict) -> Tuple[Optional[str], Optional[str]]:
-        """Extract reply information, returning (user_id, username) or (None, None)"""
-        if not data.get('isReply', False):
-            return None, None
-        
-        user_id = data.get('inReplyToUserId')
-        username = None
-        
-        if 'inReplyToUser' in data and isinstance(data['inReplyToUser'], dict):
-            username = data['inReplyToUser'].get('userName')
-        
-        return user_id, username
-
-    def _extract_user_info(self, data: dict) -> dict:
-        """Extract user information from tweet"""
-        if 'author' not in data or not isinstance(data['author'], dict):
-            return {'id': None, 'display_name': None, 'verified': False}
-        
-        author = data['author']
-        return {
-            'id': author.get('id'),
-            'display_name': author.get('name'),
-            'verified': any([
-                author.get('isVerified', False),
-                author.get('isBlueVerified', False),
-                author.get('verified', False)
-            ])
-        }
-
-    def _extract_tags(self, data: dict) -> List[str]:
-        """Extract and format hashtags and cashtags from tweet"""
-        entities = data.get('entities', {})
-        hashtags = entities.get('hashtags', [])
-        cashtags = entities.get('symbols', [])
-        
-        # Combine and sort by index
-        all_tags = sorted(hashtags + cashtags, key=lambda x: x['indices'][0])
-        
-        return ["#" + item['text'] for item in all_tags]
-
-    def _extract_media_urls(self, data: dict) -> List[str]:
-        """Extract media URLs from tweet"""
-        media_urls = []
-        media_data = data.get('media', [])
-        
-        if not isinstance(media_data, list):
-            return media_urls
-        
-        for media_item in media_data:
-            if isinstance(media_item, dict) and 'media_url_https' in media_item:
-                media_urls.append(media_item['media_url_https'])
-            elif isinstance(media_item, str):
-                media_urls.append(media_item)
-        
-        return media_urls
-
-    def _best_effort_parse_hf_dataset(self, dataset: List[dict]) -> List[dict]:
-        """Performs a best effort parsing of Apify dataset into List[XContent]
-        Any errors are logged and ignored."""
-        if dataset == [{"zero_result": True}] or not dataset:  # Todo remove first statement if it's not necessary
-            return []
-        results: List[dict] = []
-        i = 0
-        for data in dataset:
-            i = i + 1
-            if (
-                    ("text" not in data)
-                    or "url" not in data
-                    or "createdAt" not in data
-            ):
-                continue
-
-            text = data['text']
-            url = data['url']
-
-            # Extract media URLs
-            media_urls = []
-            if 'media' in data and isinstance(data['media'], list):
-                for media_item in data['media']:
-                    if isinstance(media_item, dict) and 'media_url_https' in media_item:
-                        media_urls.append(media_item['media_url_https'])
-                    elif isinstance(media_item, str):
-                        media_urls.append(media_item)
-
-            results.append({
-                "text": utils.sanitize_scraped_tweet(text),
-                "url": url,
-                "datetime": dt.datetime.strptime(
-                    data["createdAt"], "%a %b %d %H:%M:%S %z %Y"
-                ),
-                "media": media_urls if media_urls else None
-            })
+                data_entity = XContent.to_data_entity(xcontent)
+                results.append(data_entity)
+            except Exception as e:
+                bt.logging.warning(f"Failed to parse HF dataset entry to XContent/DataEntity: {e}")
 
         return results
+
+    def _validate_and_truncate_query(self, query: str) -> str:
+        """
+        Validates and truncates the Twitter search query to stay within the 512 character limit.
+        
+        Args:
+            query: The original search query
+            
+        Returns:
+            A valid query string within Twitter's limits
+        """
+        MAX_QUERY_LENGTH = 512
+        
+        if len(query) <= MAX_QUERY_LENGTH:
+            return query
+        
+        bt.logging.warning(f"Query length ({len(query)}) exceeds Twitter's limit ({MAX_QUERY_LENGTH}). Truncating...")
+        
+        # If query is too long, try to keep the most important parts
+        # Priority: usernames first, then keywords
+        query_parts = query.split()
+        
+        # Try to keep usernames (from:...) first
+        username_parts = [part for part in query_parts if part.startswith('(from:')]
+        keyword_parts = [part for part in query_parts if not part.startswith('(from:')]
+        
+        # Build truncated query
+        truncated_parts = []
+        current_length = 0
+        
+        # Add usernames first
+        for part in username_parts:
+            if current_length + len(part) + 1 <= MAX_QUERY_LENGTH:
+                truncated_parts.append(part)
+                current_length += len(part) + 1
+            else:
+                break
+        
+        # Add keywords if space allows
+        for part in keyword_parts:
+            if current_length + len(part) + 1 <= MAX_QUERY_LENGTH:
+                truncated_parts.append(part)
+                current_length += len(part) + 1
+            else:
+                break
+        
+        truncated_query = " ".join(truncated_parts)
+        
+        # If still too long, take just the first few parts
+        if len(truncated_query) > MAX_QUERY_LENGTH:
+            # Emergency fallback: take first few parts that fit
+            emergency_parts = []
+            emergency_length = 0
+            for part in query_parts:
+                if emergency_length + len(part) + 1 <= MAX_QUERY_LENGTH:
+                    emergency_parts.append(part)
+                    emergency_length += len(part) + 1
+                else:
+                    break
+            truncated_query = " ".join(emergency_parts)
+        
+        bt.logging.info(f"Truncated query: {truncated_query} (length: {len(truncated_query)})")
+        return truncated_query
 
 
 async def test_scrape():

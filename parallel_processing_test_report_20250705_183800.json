@@ -1,0 +1,407 @@
+{
+  "test_summary": {
+    "total_tests": 35,
+    "passed": 11,
+    "failed": 2,
+    "warnings": 22,
+    "success_rate": 31.428571428571427
+  },
+  "test_duration": {
+    "start_time": "2025-07-05T18:35:59.563330",
+    "end_time": "2025-07-05T18:38:00.099002",
+    "duration_seconds": 120.535672
+  },
+  "results": [
+    {
+      "test_name": "Miner Process Running",
+      "status": "FAIL",
+      "message": "No miner process found. Please start the miner first.",
+      "details": {
+        "error": "Miner process not found"
+      },
+      "timestamp": "2025-07-05T18:35:59.575357"
+    },
+    {
+      "test_name": "Parallel Coordinator Logs",
+      "status": "WARNING",
+      "message": "Log file miner.log not found",
+      "details": {
+        "log_file": "miner.log"
+      },
+      "timestamp": "2025-07-05T18:35:59.575611"
+    },
+    {
+      "test_name": "Worker Threads",
+      "status": "FAIL",
+      "message": "Miner process not found",
+      "details": {
+        "error": "No miner process"
+      },
+      "timestamp": "2025-07-05T18:35:59.575697"
+    },
+    {
+      "test_name": "Database WAL Mode",
+      "status": "PASS",
+      "message": "Database is using WAL mode: wal",
+      "details": {
+        "journal_mode": "wal"
+      },
+      "timestamp": "2025-07-05T18:35:59.576916"
+    },
+    {
+      "test_name": "Reddit Credentials",
+      "status": "WARNING",
+      "message": "Log file miner.log not found",
+      "details": {
+        "log_file": "miner.log"
+      },
+      "timestamp": "2025-07-05T18:35:59.577102"
+    },
+    {
+      "test_name": "CPU Utilization",
+      "status": "WARNING",
+      "message": "Low CPU utilization: 7.6% avg, only 1 active cores",
+      "details": {
+        "cpu_percent": [
+          5.2,
+          8.0,
+          5.2,
+          12.0
+        ],
+        "avg_cpu": 7.6,
+        "active_cores": 1
+      },
+      "timestamp": "2025-07-05T18:36:01.579955"
+    },
+    {
+      "test_name": "Data Collection Activity",
+      "status": "PASS",
+      "message": "Active data collection: 3 entities in last 10 minutes",
+      "details": {
+        "Twitter": 3
+      },
+      "timestamp": "2025-07-05T18:36:01.674772"
+    },
+    {
+      "test_name": "Queue Distribution",
+      "status": "WARNING",
+      "message": "Log file miner.log not found",
+      "details": {
+        "log_file": "miner.log"
+      },
+      "timestamp": "2025-07-05T18:36:01.675187"
+    },
+    {
+      "test_name": "CPU Utilization",
+      "status": "WARNING",
+      "message": "Low CPU utilization: 5.0% avg, only 0 active cores",
+      "details": {
+        "cpu_percent": [
+          5.0,
+          5.0,
+          4.0,
+          5.9
+        ],
+        "avg_cpu": 4.975,
+        "active_cores": 0
+      },
+      "timestamp": "2025-07-05T18:36:13.689719"
+    },
+    {
+      "test_name": "Data Collection Activity",
+      "status": "PASS",
+      "message": "Active data collection: 3 entities in last 10 minutes",
+      "details": {
+        "Twitter": 3
+      },
+      "timestamp": "2025-07-05T18:36:13.717893"
+    },
+    {
+      "test_name": "Queue Distribution",
+      "status": "WARNING",
+      "message": "Log file miner.log not found",
+      "details": {
+        "log_file": "miner.log"
+      },
+      "timestamp": "2025-07-05T18:36:13.718297"
+    },
+    {
+      "test_name": "CPU Utilization",
+      "status": "WARNING",
+      "message": "Low CPU utilization: 4.5% avg, only 0 active cores",
+      "details": {
+        "cpu_percent": [
+          4.0,
+          5.1,
+          5.0,
+          4.0
+        ],
+        "avg_cpu": 4.525,
+        "active_cores": 0
+      },
+      "timestamp": "2025-07-05T18:36:25.725003"
+    },
+    {
+      "test_name": "Data Collection Activity",
+      "status": "PASS",
+      "message": "Active data collection: 3 entities in last 10 minutes",
+      "details": {
+        "Twitter": 3
+      },
+      "timestamp": "2025-07-05T18:36:25.764429"
+    },
+    {
+      "test_name": "Queue Distribution",
+      "status": "WARNING",
+      "message": "Log file miner.log not found",
+      "details": {
+        "log_file": "miner.log"
+      },
+      "timestamp": "2025-07-05T18:36:25.764828"
+    },
+    {
+      "test_name": "CPU Utilization",
+      "status": "WARNING",
+      "message": "Low CPU utilization: 3.8% avg, only 0 active cores",
+      "details": {
+        "cpu_percent": [
+          4.0,
+          3.0,
+          5.0,
+          3.0
+        ],
+        "avg_cpu": 3.75,
+        "active_cores": 0
+      },
+      "timestamp": "2025-07-05T18:36:37.779426"
+    },
+    {
+      "test_name": "Data Collection Activity",
+      "status": "PASS",
+      "message": "Active data collection: 3 entities in last 10 minutes",
+      "details": {
+        "Twitter": 3
+      },
+      "timestamp": "2025-07-05T18:36:37.812036"
+    },
+    {
+      "test_name": "Queue Distribution",
+      "status": "WARNING",
+      "message": "Log file miner.log not found",
+      "details": {
+        "log_file": "miner.log"
+      },
+      "timestamp": "2025-07-05T18:36:37.812444"
+    },
+    {
+      "test_name": "CPU Utilization",
+      "status": "WARNING",
+      "message": "Low CPU utilization: 4.0% avg, only 0 active cores",
+      "details": {
+        "cpu_percent": [
+          5.0,
+          4.0,
+          5.1,
+          2.0
+        ],
+        "avg_cpu": 4.025,
+        "active_cores": 0
+      },
+      "timestamp": "2025-07-05T18:36:49.820874"
+    },
+    {
+      "test_name": "Data Collection Activity",
+      "status": "PASS",
+      "message": "Active data collection: 3 entities in last 10 minutes",
+      "details": {
+        "Twitter": 3
+      },
+      "timestamp": "2025-07-05T18:36:49.857349"
+    },
+    {
+      "test_name": "Queue Distribution",
+      "status": "WARNING",
+      "message": "Log file miner.log not found",
+      "details": {
+        "log_file": "miner.log"
+      },
+      "timestamp": "2025-07-05T18:36:49.857982"
+    },
+    {
+      "test_name": "CPU Utilization",
+      "status": "WARNING",
+      "message": "Low CPU utilization: 11.1% avg, only 2 active cores",
+      "details": {
+        "cpu_percent": [
+          10.1,
+          5.0,
+          5.1,
+          24.0
+        ],
+        "avg_cpu": 11.05,
+        "active_cores": 2
+      },
+      "timestamp": "2025-07-05T18:37:01.862685"
+    },
+    {
+      "test_name": "Data Collection Activity",
+      "status": "PASS",
+      "message": "Active data collection: 3 entities in last 10 minutes",
+      "details": {
+        "Twitter": 3
+      },
+      "timestamp": "2025-07-05T18:37:01.896368"
+    },
+    {
+      "test_name": "Queue Distribution",
+      "status": "WARNING",
+      "message": "Log file miner.log not found",
+      "details": {
+        "log_file": "miner.log"
+      },
+      "timestamp": "2025-07-05T18:37:01.896779"
+    },
+    {
+      "test_name": "CPU Utilization",
+      "status": "WARNING",
+      "message": "Low CPU utilization: 4.8% avg, only 0 active cores",
+      "details": {
+        "cpu_percent": [
+          5.0,
+          5.0,
+          4.0,
+          5.0
+        ],
+        "avg_cpu": 4.75,
+        "active_cores": 0
+      },
+      "timestamp": "2025-07-05T18:37:13.910662"
+    },
+    {
+      "test_name": "Data Collection Activity",
+      "status": "PASS",
+      "message": "Active data collection: 3 entities in last 10 minutes",
+      "details": {
+        "Twitter": 3
+      },
+      "timestamp": "2025-07-05T18:37:13.948406"
+    },
+    {
+      "test_name": "Queue Distribution",
+      "status": "WARNING",
+      "message": "Log file miner.log not found",
+      "details": {
+        "log_file": "miner.log"
+      },
+      "timestamp": "2025-07-05T18:37:13.948886"
+    },
+    {
+      "test_name": "CPU Utilization",
+      "status": "WARNING",
+      "message": "Low CPU utilization: 3.8% avg, only 0 active cores",
+      "details": {
+        "cpu_percent": [
+          2.0,
+          2.0,
+          5.1,
+          5.9
+        ],
+        "avg_cpu": 3.75,
+        "active_cores": 0
+      },
+      "timestamp": "2025-07-05T18:37:25.962245"
+    },
+    {
+      "test_name": "Data Collection Activity",
+      "status": "PASS",
+      "message": "Active data collection: 3 entities in last 10 minutes",
+      "details": {
+        "Twitter": 3
+      },
+      "timestamp": "2025-07-05T18:37:26.003039"
+    },
+    {
+      "test_name": "Queue Distribution",
+      "status": "WARNING",
+      "message": "Log file miner.log not found",
+      "details": {
+        "log_file": "miner.log"
+      },
+      "timestamp": "2025-07-05T18:37:26.003541"
+    },
+    {
+      "test_name": "CPU Utilization",
+      "status": "WARNING",
+      "message": "Low CPU utilization: 2.8% avg, only 0 active cores",
+      "details": {
+        "cpu_percent": [
+          4.0,
+          2.0,
+          3.0,
+          2.0
+        ],
+        "avg_cpu": 2.75,
+        "active_cores": 0
+      },
+      "timestamp": "2025-07-05T18:37:38.008749"
+    },
+    {
+      "test_name": "Data Collection Activity",
+      "status": "PASS",
+      "message": "Active data collection: 3 entities in last 10 minutes",
+      "details": {
+        "Twitter": 3
+      },
+      "timestamp": "2025-07-05T18:37:38.041458"
+    },
+    {
+      "test_name": "Queue Distribution",
+      "status": "WARNING",
+      "message": "Log file miner.log not found",
+      "details": {
+        "log_file": "miner.log"
+      },
+      "timestamp": "2025-07-05T18:37:38.041816"
+    },
+    {
+      "test_name": "CPU Utilization",
+      "status": "WARNING",
+      "message": "Low CPU utilization: 4.0% avg, only 0 active cores",
+      "details": {
+        "cpu_percent": [
+          3.0,
+          4.0,
+          3.9,
+          5.0
+        ],
+        "avg_cpu": 3.975,
+        "active_cores": 0
+      },
+      "timestamp": "2025-07-05T18:37:50.046444"
+    },
+    {
+      "test_name": "Data Collection Activity",
+      "status": "PASS",
+      "message": "Active data collection: 3 entities in last 10 minutes",
+      "details": {
+        "Twitter": 3
+      },
+      "timestamp": "2025-07-05T18:37:50.087688"
+    },
+    {
+      "test_name": "Queue Distribution",
+      "status": "WARNING",
+      "message": "Log file miner.log not found",
+      "details": {
+        "log_file": "miner.log"
+      },
+      "timestamp": "2025-07-05T18:37:50.088193"
+    }
+  ],
+  "metrics_summary": {
+    "total_metrics_collected": 10,
+    "avg_cpu_usage": 1.4975,
+    "avg_memory_usage": 19.4,
+    "avg_threads": 0.0
+  }
+}

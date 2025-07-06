@@ -44,3 +44,11 @@ class MinerStorage(ABC):
             Dict[DataEntityBucketId, List[bytes]]: Map of each bucket id to contained contents.
         """
         raise NotImplemented
+
+    @abstractmethod
+    def get_deduplication_stats(self) -> Dict[str, int]:
+        """Returns deduplication statistics for monitoring purposes.
+        Returns:
+            Dict[str, int]: Statistics about deduplication performance.
+        """
+        raise NotImplemented

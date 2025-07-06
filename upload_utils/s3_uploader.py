@@ -421,6 +421,8 @@ class S3PartitionedUploader:
                 wallet=self.wallet,
             )
 
+            bt.logging.info(f"Huggingface S3 creds:::{s3_creds}")
+
             if not s3_creds:
                 bt.logging.error("Failed to get S3 credentials")
                 return False

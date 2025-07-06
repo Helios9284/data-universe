@@ -9,7 +9,8 @@ from common.date_range import DateRange
 from scraping.scraper import ScrapeConfig, Scraper, ValidationResult, HFValidationResult
 from scraping.apify import ActorRunner, RunConfig
 from scraping.x.model import XContent
-from scraping.x.apidojo_scraper import ApiDojoTwitterScraper
+# from scraping.x.apidojo_scraper import ApiDojoTwitterScraper
+from scraping.x.twitter_api_scraper import ApiDojoTwitterScraper
 from scraping.x import utils
 import datetime as dt
 import json
