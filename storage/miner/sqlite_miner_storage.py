@@ -371,7 +371,7 @@ class SqliteMinerStorage(MinerStorage):
         with contextlib.closing(self._create_connection()) as connection:
             cursor = connection.cursor()
             values = []
-            bt.logging.info9(f"Store_hf_dataset{hf_metadata}")
+            bt.logging.info(f"Store_hf_dataset{hf_metadata}")
             for hf_metadata in hf_metadatas:
                 values.append(
                     [

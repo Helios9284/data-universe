@@ -42,9 +42,9 @@
     "processing_completed": false
   },
   "default_7": {
-    "last_offset": 683,
-    "total_records_processed": 683,
-    "last_processed_time": "2025-07-06T08:48:18.817894",
+    "last_offset": 722,
+    "total_records_processed": 722,
+    "last_processed_time": "2025-07-07T03:42:28.501404",
     "processing_completed": false
   },
   "default_8": {
@@ -96,9 +96,9 @@
     "processing_completed": false
   },
   "default_16": {
-    "last_offset": 93,
-    "total_records_processed": 93,
-    "last_processed_time": "2025-07-06T05:45:57.537546",
+    "last_offset": 225,
+    "total_records_processed": 225,
+    "last_processed_time": "2025-07-07T02:09:55.488843",
     "processing_completed": false
   },
   "default_17": {
@@ -168,9 +168,9 @@
     "processing_completed": false
   },
   "crawler-1-54wg4lxyqa5jghv1uj7dw": {
-    "last_offset": 254,
-    "total_records_processed": 254,
-    "last_processed_time": "2025-07-06T07:47:43.474175",
+    "last_offset": 289,
+    "total_records_processed": 289,
+    "last_processed_time": "2025-07-07T02:42:09.970562",
     "processing_completed": false
   },
   "crawler-4-54wg4lxyqa5jghv1uj7dw": {
@@ -180,15 +180,15 @@
     "processing_completed": false
   },
   "crawler-3-54wg4lxyqa5jghv1uj7dw": {
-    "last_offset": 262,
-    "total_records_processed": 262,
-    "last_processed_time": "2025-07-06T07:47:43.936077",
+    "last_offset": 307,
+    "total_records_processed": 307,
+    "last_processed_time": "2025-07-07T01:09:33.419978",
     "processing_completed": false
   },
   "crawler-14-54wg4lxyqa5jghv1uj7dw": {
-    "last_offset": 199,
-    "total_records_processed": 199,
-    "last_processed_time": "2025-07-06T05:46:05.019294",
+    "last_offset": 204,
+    "total_records_processed": 204,
+    "last_processed_time": "2025-07-07T01:09:33.756138",
     "processing_completed": false
   },
   "crawler-5-54wg4lxyqa5jghv1uj7dw": {
@@ -198,9 +198,9 @@
     "processing_completed": false
   },
   "crawler-9-54wg4lxyqa5jghv1uj7dw": {
-    "last_offset": 435,
-    "total_records_processed": 435,
-    "last_processed_time": "2025-07-06T08:48:23.362678",
+    "last_offset": 513,
+    "total_records_processed": 513,
+    "last_processed_time": "2025-07-07T01:09:34.125874",
     "processing_completed": false
   },
   "crawler-10-54wg4lxyqa5jghv1uj7dw": {
@@ -222,21 +222,21 @@
     "processing_completed": false
   },
   "crawler-11-54wg4lxyqa5jghv1uj7dw": {
-    "last_offset": 386,
-    "total_records_processed": 386,
-    "last_processed_time": "2025-07-06T05:46:07.694869",
+    "last_offset": 795,
+    "total_records_processed": 795,
+    "last_processed_time": "2025-07-07T01:09:34.567038",
     "processing_completed": false
   },
   "crawler-8-54wg4lxyqa5jghv1uj7dw": {
-    "last_offset": 200,
-    "total_records_processed": 200,
-    "last_processed_time": "2025-07-06T05:46:08.231952",
+    "last_offset": 389,
+    "total_records_processed": 389,
+    "last_processed_time": "2025-07-07T02:09:56.318295",
     "processing_completed": false
   },
   "crawler-13-54wg4lxyqa5jghv1uj7dw": {
-    "last_offset": 100,
-    "total_records_processed": 100,
-    "last_processed_time": "2025-07-06T05:46:08.693059",
+    "last_offset": 200,
+    "total_records_processed": 200,
+    "last_processed_time": "2025-07-06T20:07:58.324939",
     "processing_completed": false
   },
   "crawler-20-54wg4lxyqa5jghv1uj7dw": {
@@ -270,9 +270,9 @@
     "processing_completed": false
   },
   "crawler-0-refivuzfl0njxzywrfqms": {
-    "last_offset": 217,
-    "total_records_processed": 217,
-    "last_processed_time": "2025-07-06T08:48:27.022120",
+    "last_offset": 250,
+    "total_records_processed": 250,
+    "last_processed_time": "2025-07-07T02:42:11.140651",
     "processing_completed": false
   },
   "crawler-1-r78iq9ojeemy3l03x7fn6": {
@@ -282,33 +282,33 @@
     "processing_completed": false
   },
   "crawler-2-r78iq9ojeemy3l03x7fn6": {
-    "last_offset": 256,
-    "total_records_processed": 256,
-    "last_processed_time": "2025-07-06T07:47:46.664718",
+    "last_offset": 289,
+    "total_records_processed": 289,
+    "last_processed_time": "2025-07-07T02:09:57.139754",
     "processing_completed": false
   },
   "crawler-3-r78iq9ojeemy3l03x7fn6": {
-    "last_offset": 258,
-    "total_records_processed": 258,
-    "last_processed_time": "2025-07-06T07:47:47.034949",
+    "last_offset": 290,
+    "total_records_processed": 290,
+    "last_processed_time": "2025-07-07T02:09:57.470212",
     "processing_completed": false
   },
   "crawler-0-r78iq9ojeemy3l03x7fn6": {
-    "last_offset": 236,
-    "total_records_processed": 236,
-    "last_processed_time": "2025-07-06T08:48:27.582027",
+    "last_offset": 239,
+    "total_records_processed": 239,
+    "last_processed_time": "2025-07-07T02:42:11.571576",
     "processing_completed": false
   },
   "crawler-8-r78iq9ojeemy3l03x7fn6": {
-    "last_offset": 1,
-    "total_records_processed": 1,
-    "last_processed_time": "2025-07-06T05:46:14.209479",
+    "last_offset": 30,
+    "total_records_processed": 30,
+    "last_processed_time": "2025-07-07T01:09:36.970053",
     "processing_completed": false
   },
   "crawler-5-r78iq9ojeemy3l03x7fn6": {
-    "last_offset": 344,
-    "total_records_processed": 344,
-    "last_processed_time": "2025-07-06T07:47:47.982707",
+    "last_offset": 436,
+    "total_records_processed": 436,
+    "last_processed_time": "2025-07-07T03:42:29.476618",
     "processing_completed": false
   },
   "crawler-12-r78iq9ojeemy3l03x7fn6": {
@@ -318,9 +318,9 @@
     "processing_completed": false
   },
   "crawler-11-r78iq9ojeemy3l03x7fn6": {
-    "last_offset": 74,
-    "total_records_processed": 74,
-    "last_processed_time": "2025-07-06T05:46:15.573410",
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T14:25:21.220101",
     "processing_completed": false
   },
   "crawler-10-r78iq9ojeemy3l03x7fn6": {
@@ -336,9 +336,9 @@
     "processing_completed": false
   },
   "crawler-7-0bjrzc4gvaiqu2bey7abe": {
-    "last_offset": 325,
-    "total_records_processed": 325,
-    "last_processed_time": "2025-07-06T06:47:12.384985",
+    "last_offset": 382,
+    "total_records_processed": 382,
+    "last_processed_time": "2025-07-07T01:09:38.197417",
     "processing_completed": false
   },
   "crawler-6-0bjrzc4gvaiqu2bey7abe": {
@@ -348,9 +348,9 @@
     "processing_completed": false
   },
   "crawler-5-0bjrzc4gvaiqu2bey7abe": {
-    "last_offset": 100,
-    "total_records_processed": 100,
-    "last_processed_time": "2025-07-06T05:46:18.313846",
+    "last_offset": 200,
+    "total_records_processed": 200,
+    "last_processed_time": "2025-07-06T22:08:30.599923",
     "processing_completed": false
   },
   "crawler-8-0bjrzc4gvaiqu2bey7abe": {
@@ -366,9 +366,9 @@
     "processing_completed": false
   },
   "crawler-0-sngikjbrw0liy1jntx-ow": {
-    "last_offset": 1,
-    "total_records_processed": 1,
-    "last_processed_time": "2025-07-06T05:46:19.456031",
+    "last_offset": 3,
+    "total_records_processed": 3,
+    "last_processed_time": "2025-07-07T02:09:58.590892",
     "processing_completed": false
   },
   "crawler-2-sngikjbrw0liy1jntx-ow": {
@@ -378,9 +378,9 @@
     "processing_completed": false
   },
   "crawler-0-hu0fmdzpxcylsz1xiyndu": {
-    "last_offset": 100,
-    "total_records_processed": 100,
-    "last_processed_time": "2025-07-06T06:47:13.286663",
+    "last_offset": 200,
+    "total_records_processed": 200,
+    "last_processed_time": "2025-07-06T17:07:22.899197",
     "processing_completed": false
   },
   "crawler-2-hu0fmdzpxcylsz1xiyndu": {
@@ -390,9 +390,9 @@
     "processing_completed": false
   },
   "crawler-1-hu0fmdzpxcylsz1xiyndu": {
-    "last_offset": 101,
-    "total_records_processed": 101,
-    "last_processed_time": "2025-07-06T05:46:21.098501",
+    "last_offset": 200,
+    "total_records_processed": 200,
+    "last_processed_time": "2025-07-06T20:07:59.989552",
     "processing_completed": false
   },
   "crawler-1-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
@@ -408,21 +408,21 @@
     "processing_completed": false
   },
   "crawler-0-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
-    "last_offset": 202,
-    "total_records_processed": 202,
-    "last_processed_time": "2025-07-06T06:47:14.530266",
+    "last_offset": 210,
+    "total_records_processed": 210,
+    "last_processed_time": "2025-07-07T02:09:59.122266",
     "processing_completed": false
   },
   "crawler-8-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
-    "last_offset": 200,
-    "total_records_processed": 200,
-    "last_processed_time": "2025-07-06T08:48:30.661164",
+    "last_offset": 235,
+    "total_records_processed": 235,
+    "last_processed_time": "2025-07-06T21:08:14.599634",
     "processing_completed": false
   },
   "crawler-6-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
-    "last_offset": 200,
-    "total_records_processed": 200,
-    "last_processed_time": "2025-07-06T05:46:23.670355",
+    "last_offset": 224,
+    "total_records_processed": 224,
+    "last_processed_time": "2025-07-07T02:42:13.126294",
     "processing_completed": false
   },
   "crawler-18-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
@@ -438,9 +438,9 @@
     "processing_completed": false
   },
   "crawler-5-d9649fb7-63d3-4fe4-b352-b1bffe80c971": {
-    "last_offset": 203,
-    "total_records_processed": 203,
-    "last_processed_time": "2025-07-06T07:47:51.510884",
+    "last_offset": 292,
+    "total_records_processed": 292,
+    "last_processed_time": "2025-07-07T01:09:39.337100",
     "processing_completed": false
   },
   "crawler-3-d9649fb7-63d3-4fe4-b352-b1bffe80c971": {
@@ -450,9 +450,9 @@
     "processing_completed": false
   },
   "crawler-7-d9649fb7-63d3-4fe4-b352-b1bffe80c971": {
-    "last_offset": 74,
-    "total_records_processed": 74,
-    "last_processed_time": "2025-07-06T05:46:25.813183",
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T16:07:14.057234",
     "processing_completed": false
   },
   "crawler-6-d9649fb7-63d3-4fe4-b352-b1bffe80c971": {
@@ -474,15 +474,15 @@
     "processing_completed": false
   },
   "crawler-7-1ad594ea-9a96-4626-baf3-df76920c5b01": {
-    "last_offset": 202,
-    "total_records_processed": 202,
-    "last_processed_time": "2025-07-06T08:48:33.559115",
+    "last_offset": 208,
+    "total_records_processed": 208,
+    "last_processed_time": "2025-07-07T02:42:14.220470",
     "processing_completed": false
   },
   "crawler-2-1ad594ea-9a96-4626-baf3-df76920c5b01": {
-    "last_offset": 206,
-    "total_records_processed": 206,
-    "last_processed_time": "2025-07-06T05:46:28.701892",
+    "last_offset": 240,
+    "total_records_processed": 240,
+    "last_processed_time": "2025-07-07T01:09:40.304032",
     "processing_completed": false
   },
   "crawler-3-1ad594ea-9a96-4626-baf3-df76920c5b01": {
@@ -492,15 +492,15 @@
     "processing_completed": false
   },
   "crawler-5-1ad594ea-9a96-4626-baf3-df76920c5b01": {
-    "last_offset": 100,
-    "total_records_processed": 100,
-    "last_processed_time": "2025-07-06T05:46:30.236137",
+    "last_offset": 208,
+    "total_records_processed": 208,
+    "last_processed_time": "2025-07-07T01:09:40.659657",
     "processing_completed": false
   },
   "crawler-6-1ad594ea-9a96-4626-baf3-df76920c5b01": {
-    "last_offset": 200,
-    "total_records_processed": 200,
-    "last_processed_time": "2025-07-06T05:46:30.664353",
+    "last_offset": 201,
+    "total_records_processed": 201,
+    "last_processed_time": "2025-07-07T03:42:34.784285",
     "processing_completed": false
   },
   "crawler-8-1ad594ea-9a96-4626-baf3-df76920c5b01": {
@@ -522,9 +522,9 @@
     "processing_completed": false
   },
   "crawler-2-c77e3b8f-f547-4735-a94f-965917bc1f22": {
-    "last_offset": 200,
-    "total_records_processed": 200,
-    "last_processed_time": "2025-07-06T05:46:32.819298",
+    "last_offset": 201,
+    "total_records_processed": 201,
+    "last_processed_time": "2025-07-06T21:08:16.319498",
     "processing_completed": false
   },
   "crawler-1-c77e3b8f-f547-4735-a94f-965917bc1f22": {
@@ -534,9 +534,9 @@
     "processing_completed": false
   },
   "crawler-0-rldhawtaeabtwjhlsxwq-": {
-    "last_offset": 297,
-    "total_records_processed": 297,
-    "last_processed_time": "2025-07-06T08:48:35.604851",
+    "last_offset": 646,
+    "total_records_processed": 646,
+    "last_processed_time": "2025-07-07T03:42:35.743775",
     "processing_completed": false
   },
   "crawler-1-rldhawtaeabtwjhlsxwq-": {
@@ -546,21 +546,21 @@
     "processing_completed": false
   },
   "crawler-0-pmflewiz4acvdkcxf4fht": {
-    "last_offset": 305,
-    "total_records_processed": 305,
-    "last_processed_time": "2025-07-06T08:48:36.070028",
+    "last_offset": 464,
+    "total_records_processed": 464,
+    "last_processed_time": "2025-07-06T22:08:33.389047",
     "processing_completed": false
   },
   "crawler-1-pmflewiz4acvdkcxf4fht": {
-    "last_offset": 516,
-    "total_records_processed": 516,
-    "last_processed_time": "2025-07-06T07:47:56.283611",
+    "last_offset": 554,
+    "total_records_processed": 554,
+    "last_processed_time": "2025-07-07T01:09:41.689961",
     "processing_completed": false
   },
   "crawler-1-ghxi2qg2ltydxmt7delqy": {
-    "last_offset": 195,
-    "total_records_processed": 195,
-    "last_processed_time": "2025-07-06T08:48:36.886615",
+    "last_offset": 200,
+    "total_records_processed": 200,
+    "last_processed_time": "2025-07-06T21:08:17.501711",
     "processing_completed": false
   },
   "crawler-2-ghxi2qg2ltydxmt7delqy": {
@@ -570,15 +570,15 @@
     "processing_completed": false
   },
   "crawler-0-ghxi2qg2ltydxmt7delqy": {
-    "last_offset": 344,
-    "total_records_processed": 344,
-    "last_processed_time": "2025-07-06T07:47:56.830369",
+    "last_offset": 555,
+    "total_records_processed": 555,
+    "last_processed_time": "2025-07-07T02:10:01.815419",
     "processing_completed": false
   },
   "crawler-3-ghxi2qg2ltydxmt7delqy": {
-    "last_offset": 53,
-    "total_records_processed": 53,
-    "last_processed_time": "2025-07-06T13:25:14.052625",
+    "last_offset": 103,
+    "total_records_processed": 103,
+    "last_processed_time": "2025-07-06T16:07:14.665098",
     "processing_completed": false
   },
   "crawler-5-ghxi2qg2ltydxmt7delqy": {
@@ -588,9 +588,9 @@
     "processing_completed": false
   },
   "crawler-6-ghxi2qg2ltydxmt7delqy": {
-    "last_offset": 260,
-    "total_records_processed": 260,
-    "last_processed_time": "2025-07-06T08:48:37.563747",
+    "last_offset": 493,
+    "total_records_processed": 493,
+    "last_processed_time": "2025-07-07T03:42:36.306300",
     "processing_completed": false
   },
   "crawler-7-ghxi2qg2ltydxmt7delqy": {
@@ -600,27 +600,27 @@
     "processing_completed": false
   },
   "crawler-4-ghxi2qg2ltydxmt7delqy": {
-    "last_offset": 407,
-    "total_records_processed": 407,
-    "last_processed_time": "2025-07-06T08:48:38.286101",
+    "last_offset": 485,
+    "total_records_processed": 485,
+    "last_processed_time": "2025-07-07T02:42:15.778262",
     "processing_completed": false
   },
   "crawler-8-ghxi2qg2ltydxmt7delqy": {
-    "last_offset": 100,
-    "total_records_processed": 100,
-    "last_processed_time": "2025-07-06T07:47:57.901050",
+    "last_offset": 200,
+    "total_records_processed": 200,
+    "last_processed_time": "2025-07-06T19:07:47.257144",
     "processing_completed": false
   },
   "crawler-12-ghxi2qg2ltydxmt7delqy": {
-    "last_offset": 348,
-    "total_records_processed": 348,
-    "last_processed_time": "2025-07-06T07:47:58.252989",
+    "last_offset": 471,
+    "total_records_processed": 471,
+    "last_processed_time": "2025-07-07T03:42:36.707732",
     "processing_completed": false
   },
   "crawler-11-ghxi2qg2ltydxmt7delqy": {
-    "last_offset": 100,
-    "total_records_processed": 100,
-    "last_processed_time": "2025-07-06T05:46:40.024696",
+    "last_offset": 200,
+    "total_records_processed": 200,
+    "last_processed_time": "2025-07-07T01:09:43.670063",
     "processing_completed": false
   },
   "crawler-9-ghxi2qg2ltydxmt7delqy": {
@@ -642,9 +642,9 @@
     "processing_completed": false
   },
   "crawler-4-ulbcgagepvuowavmzrnd2": {
-    "last_offset": 202,
-    "total_records_processed": 202,
-    "last_processed_time": "2025-07-06T07:48:00.211998",
+    "last_offset": 203,
+    "total_records_processed": 203,
+    "last_processed_time": "2025-07-07T03:42:38.317682",
     "processing_completed": false
   },
   "crawler-6-ulbcgagepvuowavmzrnd2": {
@@ -684,9 +684,9 @@
     "processing_completed": false
   },
   "crawler-26-ulbcgagepvuowavmzrnd2": {
-    "last_offset": 74,
-    "total_records_processed": 74,
-    "last_processed_time": "2025-07-06T05:46:46.363362",
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T20:08:02.538635",
     "processing_completed": false
   },
   "crawler-15-ulbcgagepvuowavmzrnd2": {
@@ -696,9 +696,9 @@
     "processing_completed": false
   },
   "crawler-23-ulbcgagepvuowavmzrnd2": {
-    "last_offset": 75,
-    "total_records_processed": 75,
-    "last_processed_time": "2025-07-06T05:46:47.248064",
+    "last_offset": 149,
+    "total_records_processed": 149,
+    "last_processed_time": "2025-07-07T03:42:38.997449",
     "processing_completed": false
   },
   "crawler-0-tgv-lw2aqhsbvilzk3bcq": {
@@ -714,9 +714,9 @@
     "processing_completed": false
   },
   "crawler-17-r78iq9ojeemy3l03x7fn6": {
-    "last_offset": 75,
-    "total_records_processed": 75,
-    "last_processed_time": "2025-07-06T06:47:11.936039",
+    "last_offset": 148,
+    "total_records_processed": 148,
+    "last_processed_time": "2025-07-06T23:08:48.123242",
     "processing_completed": false
   },
   "crawler-17-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
@@ -756,9 +756,9 @@
     "processing_completed": false
   },
   "crawler-15-r78iq9ojeemy3l03x7fn6": {
-    "last_offset": 74,
-    "total_records_processed": 74,
-    "last_processed_time": "2025-07-06T07:47:48.508110",
+    "last_offset": 150,
+    "total_records_processed": 150,
+    "last_processed_time": "2025-07-06T21:08:13.907799",
     "processing_completed": false
   },
   "crawler-10-sngikjbrw0liy1jntx-ow": {
@@ -768,9 +768,9 @@
     "processing_completed": false
   },
   "crawler-4-1ad594ea-9a96-4626-baf3-df76920c5b01": {
-    "last_offset": 101,
-    "total_records_processed": 101,
-    "last_processed_time": "2025-07-06T08:48:33.203762",
+    "last_offset": 300,
+    "total_records_processed": 300,
+    "last_processed_time": "2025-07-07T03:42:34.375736",
     "processing_completed": false
   },
   "crawler-8-c77e3b8f-f547-4735-a94f-965917bc1f22": {
@@ -813,6 +813,174 @@
     "last_offset": 75,
     "total_records_processed": 75,
     "last_processed_time": "2025-07-06T09:41:30.544606",
+    "processing_completed": false
+  },
+  "crawler-28-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T14:25:22.505958",
+    "processing_completed": false
+  },
+  "crawler-22-ulbcgagepvuowavmzrnd2": {
+    "last_offset": 146,
+    "total_records_processed": 146,
+    "last_processed_time": "2025-07-06T23:08:53.367159",
+    "processing_completed": false
+  },
+  "crawler-0-8uoxuhxf0f98djq4htfjk": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T16:07:15.368206",
+    "processing_completed": false
+  },
+  "crawler-22-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T17:07:24.732067",
+    "processing_completed": false
+  },
+  "crawler-5-c77e3b8f-f547-4735-a94f-965917bc1f22": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T18:07:33.856741",
+    "processing_completed": false
+  },
+  "crawler-26-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 150,
+    "total_records_processed": 150,
+    "last_processed_time": "2025-07-06T23:08:52.622152",
+    "processing_completed": false
+  },
+  "crawler-7-c77e3b8f-f547-4735-a94f-965917bc1f22": {
+    "last_offset": 74,
+    "total_records_processed": 74,
+    "last_processed_time": "2025-07-06T19:07:46.311249",
+    "processing_completed": false
+  },
+  "crawler-21-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 114,
+    "total_records_processed": 114,
+    "last_processed_time": "2025-07-07T01:09:35.301528",
+    "processing_completed": false
+  },
+  "crawler-33-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 74,
+    "total_records_processed": 74,
+    "last_processed_time": "2025-07-06T21:08:13.009721",
+    "processing_completed": false
+  },
+  "crawler-15-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 150,
+    "total_records_processed": 150,
+    "last_processed_time": "2025-07-06T22:08:34.245752",
+    "processing_completed": false
+  },
+  "crawler-25-ulbcgagepvuowavmzrnd2": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T22:08:35.347933",
+    "processing_completed": false
+  },
+  "crawler-18-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T23:08:51.811684",
+    "processing_completed": false
+  },
+  "crawler-20-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-06T23:08:52.146481",
+    "processing_completed": false
+  },
+  "crawler-35-54wg4lxyqa5jghv1uj7dw": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-07T01:09:34.933570",
+    "processing_completed": false
+  },
+  "crawler-13-r78iq9ojeemy3l03x7fn6": {
+    "last_offset": 97,
+    "total_records_processed": 97,
+    "last_processed_time": "2025-07-07T01:09:37.789283",
+    "processing_completed": false
+  },
+  "crawler-24-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 149,
+    "total_records_processed": 149,
+    "last_processed_time": "2025-07-07T02:10:03.365543",
+    "processing_completed": false
+  },
+  "crawler-8-d9649fb7-63d3-4fe4-b352-b1bffe80c971": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-07T02:10:00.167183",
+    "processing_completed": false
+  },
+  "crawler-11-ulbcgagepvuowavmzrnd2": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-07T02:10:03.794819",
+    "processing_completed": false
+  },
+  "crawler-19-ulbcgagepvuowavmzrnd2": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-07T02:10:04.440940",
+    "processing_completed": false
+  },
+  "crawler-7-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
+    "last_offset": 203,
+    "total_records_processed": 203,
+    "last_processed_time": "2025-07-07T03:42:30.788391",
+    "processing_completed": false
+  },
+  "crawler-4-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
+    "last_offset": 540,
+    "total_records_processed": 540,
+    "last_processed_time": "2025-07-07T03:42:31.482904",
+    "processing_completed": false
+  },
+  "crawler-10-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
+    "last_offset": 114,
+    "total_records_processed": 114,
+    "last_processed_time": "2025-07-07T03:42:31.909261",
+    "processing_completed": false
+  },
+  "crawler-2-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
+    "last_offset": 291,
+    "total_records_processed": 291,
+    "last_processed_time": "2025-07-07T03:42:32.448172",
+    "processing_completed": false
+  },
+  "crawler-5-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
+    "last_offset": 307,
+    "total_records_processed": 307,
+    "last_processed_time": "2025-07-07T03:42:32.925116",
+    "processing_completed": false
+  },
+  "crawler-15-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-07T03:42:33.328735",
+    "processing_completed": false
+  },
+  "crawler-14-fe1ce77c-e4af-4b07-9842-ec16856543b0": {
+    "last_offset": 74,
+    "total_records_processed": 74,
+    "last_processed_time": "2025-07-07T03:42:33.665439",
+    "processing_completed": false
+  },
+  "crawler-10-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 205,
+    "total_records_processed": 205,
+    "last_processed_time": "2025-07-07T03:42:37.125295",
+    "processing_completed": false
+  },
+  "crawler-19-ghxi2qg2ltydxmt7delqy": {
+    "last_offset": 75,
+    "total_records_processed": 75,
+    "last_processed_time": "2025-07-07T03:42:37.587602",
     "processing_completed": false
   }
 }
